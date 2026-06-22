@@ -32,11 +32,32 @@ echo ========================================
 echo ✓ Application is ready!
 echo ========================================
 echo.
-echo Frontend: http://localhost:3001
-echo Backend:  http://localhost:8000
-echo API Docs: http://localhost:8000/api/docs
+echo 🌐 Frontend: http://localhost:3001
+echo 🔧 Backend:  http://localhost:8000
+echo 📚 API Docs: http://localhost:8000/api/docs
+echo 🗄️  Database: localhost:5432 (user: admin, db: worldcup)
 echo.
-echo To stop the application, run: docker-compose down
-echo To view logs: docker-compose logs -f
+echo ========================================
+echo 📝 Next Steps:
+echo ========================================
+echo 1. Open http://localhost:3001 in your browser
+echo 2. Click "Sign Up" to create an account
+echo 3. Fill in your details and register
+echo 4. Login and explore the dashboard
+echo.
+echo ========================================
+echo 🛠️  Useful Commands:
+echo ========================================
+echo Stop services:   docker-compose down
+echo View logs:       docker-compose logs -f
+echo Restart backend: docker restart worldcup_backend
+echo Database shell:  docker exec -it worldcup_db psql -U admin -d worldcup
+echo.
+echo ========================================
+echo 📖 Documentation:
+echo ========================================
+echo - REGISTRATION_FIXED.md (registration troubleshooting)
+echo - TESTING_GUIDE.md (comprehensive testing guide)
+echo - README.md (project overview)
 echo.
 pause
