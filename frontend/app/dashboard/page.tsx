@@ -19,7 +19,6 @@ export default function DashboardPage() {
   const fetchStats = async () => {
     try {
       setIsLoading(true);
-      // Add timeout to prevent infinite loading
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Request timeout')), 10000)
       );
@@ -29,7 +28,6 @@ export default function DashboardPage() {
       setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
-      // Set default stats on error so UI still shows
       setStats({
         total_predictions: 0,
         match_predictions: 0,
@@ -41,62 +39,70 @@ export default function DashboardPage() {
     }
   };
 
+  const quickActions = [
+    { href: '/dashboard/match-predictor', icon: '⚽', title: 'Match Predictor', desc: 'Predict match scores and see AI predictions', color: 'from-gold/20 to-gold/5' },
+    { href: '/dashboard/tournament-simulator', icon: '🏆', title: 'Tournament Simulator', desc: 'Run simulations to predict the winner', color: 'from-purple-500/20 to-purple-500/5' },
+    { href: '/dashboard/match-simulator', icon: '🎲', title: 'Match Simulator', desc: 'Simulate individual match outcomes', color: 'from-blue-500/20 to-blue-500/5' },
+    { href: '/dashboard/golden-boot', icon: '🥇', title: 'Golden Boot', desc: 'Predict the top goal scorer', color: 'from-yellow-500/20 to-yellow-500/5' },
+    { href: '/dashboard/golden-glove', icon: '🧤', title: 'Golden Glove', desc: 'Predict the best goalkeeper', color: 'from-green-500/20 to-green-500/5' },
+  ];
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-3xl font-heading font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-3">
           Welcome back, {user?.username}! 👋
         </h1>
-        <p className="text-gray-400">
+        <p className="text-gray-400 text-lg">
           Track your predictions and explore AI-powered World Cup insights
         </p>
       </div>
 
       {/* Stats Grid */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gold"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="bg-gradient-to-br from-gold/20 to-gold/5 border-gold/50">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="bg-gradient-to-br from-gold/20 to-gold/5 border-gold/50 hover:scale-105">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-gray-400 text-sm mb-1">Total Predictions</p>
-                <p className="text-3xl font-bold text-white">{stats?.total_predictions || 0}</p>
+                <p className="text-gray-400 text-sm mb-2 font-medium">Total Predictions</p>
+                <p className="text-4xl font-bold text-white">{stats?.total_predictions || 0}</p>
               </div>
-              <div className="text-3xl">🎯</div>
+              <div className="text-4xl">🎯</div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500/20 to-blue-500/5 border-blue-500/50">
+          <Card className="bg-gradient-to-br from-blue-500/20 to-blue-500/5 border-blue-500/50 hover:scale-105">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-gray-400 text-sm mb-1">Match Predictions</p>
-                <p className="text-3xl font-bold text-white">{stats?.match_predictions || 0}</p>
+                <p className="text-gray-400 text-sm mb-2 font-medium">Match Predictions</p>
+                <p className="text-4xl font-bold text-white">{stats?.match_predictions || 0}</p>
               </div>
-              <div className="text-3xl">⚽</div>
+              <div className="text-4xl">⚽</div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-500/20 to-green-500/5 border-green-500/50">
+          <Card className="bg-gradient-to-br from-green-500/20 to-green-500/5 border-green-500/50 hover:scale-105">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-gray-400 text-sm mb-1">Player Predictions</p>
-                <p className="text-3xl font-bold text-white">{stats?.player_predictions || 0}</p>
+                <p className="text-gray-400 text-sm mb-2 font-medium">Player Predictions</p>
+                <p className="text-4xl font-bold text-white">{stats?.player_predictions || 0}</p>
               </div>
-              <div className="text-3xl">👤</div>
+              <div className="text-4xl">👤</div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500/20 to-purple-500/5 border-purple-500/50">
+          <Card className="bg-gradient-to-br from-purple-500/20 to-purple-500/5 border-purple-500/50 hover:scale-105">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-gray-400 text-sm mb-1">Simulations Run</p>
-                <p className="text-3xl font-bold text-white">{stats?.simulations_run || 0}</p>
+                <p className="text-gray-400 text-sm mb-2 font-medium">Simulations Run</p>
+                <p className="text-4xl font-bold text-white">{stats?.simulations_run || 0}</p>
               </div>
-              <div className="text-3xl">🔮</div>
+              <div className="text-4xl">🔮</div>
             </div>
           </Card>
         </div>
@@ -104,72 +110,26 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-2xl font-heading font-bold text-white mb-4">
+        <h2 className="text-3xl font-heading font-bold text-white mb-6">
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link href="/dashboard/match-predictor">
-            <Card className="hover:border-gold/50 transition-all cursor-pointer group">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">⚽</div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors">
-                Match Predictor
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Predict match scores and see AI probability predictions
-              </p>
-            </Card>
-          </Link>
+          {quickActions.map((action, index) => (
+            <Link key={index} href={action.href}>
+              <Card className={`h-full bg-gradient-to-br ${action.color} hover:scale-[1.03] hover:shadow-card-hover cursor-pointer group`}>
+                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{action.icon}</div>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors">
+                  {action.title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {action.desc}
+                </p>
+              </Card>
+            </Link>
+          ))}
 
-          <Link href="/dashboard/tournament-simulator">
-            <Card className="hover:border-gold/50 transition-all cursor-pointer group">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🏆</div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors">
-                Tournament Simulator
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Run thousands of simulations to predict the winner
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/match-simulator">
-            <Card className="hover:border-gold/50 transition-all cursor-pointer group">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🎲</div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors">
-                Match Simulator
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Simulate individual matches for detailed probabilities
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/golden-boot">
-            <Card className="hover:border-gold/50 transition-all cursor-pointer group">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🥇</div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors">
-                Golden Boot
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Predict the tournament's top goal scorer
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/golden-glove">
-            <Card className="hover:border-gold/50 transition-all cursor-pointer group">
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">🧤</div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold transition-colors">
-                Golden Glove
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Predict the best goalkeeper of the tournament
-              </p>
-            </Card>
-          </Link>
-
-          <Card className="bg-gradient-to-br from-gold/10 to-dark-800 border-gold/30">
-            <div className="text-4xl mb-3">✨</div>
+          <Card className="bg-gradient-to-br from-gold/10 to-dark-800 border-gold/30 h-full">
+            <div className="text-5xl mb-4">✨</div>
             <h3 className="text-xl font-bold text-gold mb-2">
               More Coming Soon
             </h3>
@@ -182,11 +142,11 @@ export default function DashboardPage() {
 
       {/* Info Box */}
       <Card className="bg-blue-500/10 border-blue-500/30">
-        <div className="flex items-start gap-3">
-          <div className="text-2xl">💡</div>
-          <div>
-            <h4 className="font-semibold text-white mb-1">How to Get Started</h4>
-            <ol className="text-sm text-gray-400 space-y-1 list-decimal list-inside">
+        <div className="flex items-start gap-4">
+          <div className="text-3xl">💡</div>
+          <div className="flex-1">
+            <h4 className="font-semibold text-white text-lg mb-3">How to Get Started</h4>
+            <ol className="text-sm text-gray-400 space-y-2 list-decimal list-inside leading-relaxed">
               <li>Start with the Match Predictor to predict individual match scores</li>
               <li>Run Tournament Simulations to see which team is most likely to win</li>
               <li>Make your Golden Boot and Golden Glove predictions</li>
