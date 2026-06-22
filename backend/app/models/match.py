@@ -8,8 +8,8 @@ class Match(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     match_number = Column(Integer, nullable=False)
-    home_team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
-    away_team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
+    home_team_id = Column(Integer, ForeignKey("teams.id"), nullable=True)  # Allow NULL for TBD matches
+    away_team_id = Column(Integer, ForeignKey("teams.id"), nullable=True)  # Allow NULL for TBD matches
     match_date = Column(DateTime(timezone=True), nullable=False)
     venue = Column(String(150), nullable=True)
     match_stage = Column(String(20), nullable=True)
