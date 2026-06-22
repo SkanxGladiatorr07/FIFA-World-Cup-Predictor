@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test - FIFA World Cup 2026</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        h1 { color: #FFD700; }
+        .form-group {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FFD700;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            background: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
+        button {
+            background: #FFD700;
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px 10px 0;
+        }
+        button:hover {
+            background: #FFC700;
+        }
+        .output {
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #0ff; }
+        .warning { color: #ff0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚽ Authentication Test Tool</h1>
+        <p>This page tests the authentication flow independently of the React app.</p>
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" value="Skan" />
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" />
+        </div>
+        
+        <button onclick="clearOutput()">Clear Output</button>
+        <button onclick="testLogin()">1. Test Login</button>
+        <button onclick="checkCookies()">2. Check Cookies</button>
+        <button onclick="testGetUser()">3. Test Get User</button>
+        <button onclick="testAll()">Run All Tests</button>
+        
+        <div class="output" id="output">
+            <div class="info">Ready to test. Enter your password and click "Run All Tests".</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML += `<div class="${type}">[${timestamp}] ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+            log('Output cleared', 'info');
+        }
+        
+        function getCookie(name) {
+            const nameEQ = name + '=';
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        
+        function setCookie(name, value, minutes) {
+            const date = new Date();
+            date.setTime(date.getTime() + minutes * 60 * 1000);
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/;SameSite=Lax`;
+        }
+        
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!password) {
+                log('Please enter password', 'error');
+                return null;
+            }
+            
+            log('=== TEST 1: LOGIN ===', 'info');
+            log(`Attempting login for user: ${username}`, 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                log(`Response status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    log(`Error: ${JSON.stringify(error)}`, 'error');
+                    return null;
+                }
+                
+                const data = await response.json();
+                log('✓ Login successful!', 'success');
+                log(`Access token length: ${data.access_token.length}`, 'info');
+                log(`Refresh token length: ${data.refresh_token.length}`, 'info');
+                log(`User: ${data.user.username} (ID: ${data.user.id})`, 'success');
+                
+                // Store tokens in cookies
+                setCookie('access_token', data.access_token, 30);
+                setCookie('refresh_token', data.refresh_token, 7 * 24 * 60);
+                log('✓ Tokens stored in cookies', 'success');
+                
+                return data;
+            } catch (error) {
+                log(`Network error: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        function checkCookies() {
+            log('=== TEST 2: CHECK COOKIES ===', 'info');
+            
+            const accessToken = getCookie('access_token');
+            const refreshToken = getCookie('refresh_token');
+            
+            if (accessToken) {
+                log('✓ access_token found', 'success');
+                log(`  Length: ${accessToken.length}`, 'info');
+                log(`  First 50 chars: ${accessToken.substring(0, 50)}...`, 'info');
+            } else {
+                log('✗ access_token NOT found!', 'error');
+            }
+            
+            if (refreshToken) {
+                log('✓ refresh_token found', 'success');
+                log(`  Length: ${refreshToken.length}`, 'info');
+            } else {
+                log('✗ refresh_token NOT found!', 'error');
+            }
+            
+            log('All cookies:', 'info');
+            log(document.cookie || '(no cookies)', 'warning');
+            
+            return { accessToken, refreshToken };
+        }
+        
+        async function testGetUser() {
+            log('=== TEST 3: GET USER ===', 'info');
+            
+            const accessToken = getCookie('access_token');
+            
+            if (!accessToken) {
+                log('✗ No access token found. Run Test 1 first.', 'error');
+                return null;
+            }
+            
+            log('Fetching user with token...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/users/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                log(`Response status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    log(`Error: ${JSON.stringify(error)}`, 'error');
+                    log('✗ Token validation failed!', 'error');
+                    return null;
+                }
+                
+                const data = await response.json();
+                log('✓ User fetch successful!', 'success');
+                log(`Username: ${data.username}`, 'success');
+                log(`Email: ${data.email}`, 'success');
+                log(`User ID: ${data.id}`, 'success');
+                log(`Active: ${data.is_active}`, 'success');
+                
+                return data;
+            } catch (error) {
+                log(`Network error: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        async function testAll() {
+            clearOutput();
+            log('=== RUNNING ALL TESTS ===', 'info');
+            log('', 'info');
+            
+            // Test 1: Login
+            const loginData = await testLogin();
+            if (!loginData) {
+                log('', 'info');
+                log('✗ TESTS FAILED: Login failed', 'error');
+                return;
+            }
+            
+            // Wait a bit
+            await new Promise(resolve => setTimeout(resolve, 100));
+            log('', 'info');
+            
+            // Test 2: Check cookies
+            const cookies = checkCookies();
+            if (!cookies.accessToken) {
+                log('', 'info');
+                log('✗ TESTS FAILED: Cookies not set', 'error');
+                return;
+            }
+            
+            log('', 'info');
+            
+            // Test 3: Get user
+            const userData = await testGetUser();
+            if (!userData) {
+                log('', 'info');
+                log('✗ TESTS FAILED: Token validation failed', 'error');
+                return;
+            }
+            
+            log('', 'info');
+            log('=== ALL TESTS PASSED! ===', 'success');
+            log('✓ Login works', 'success');
+            log('✓ Cookies are set correctly', 'success');
+            log('✓ Token is valid and accepted by backend', 'success');
+            log('', 'info');
+            log('If this works but the React app doesn\'t, the issue is in the React code.', 'warning');
+        }
+    </script>
+</body>
+</html>

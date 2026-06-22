@@ -17,8 +17,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   
   useEffect(() => {
     const verifyAuth = async () => {
-      // Check if we have a token in cookies first
-      const hasToken = document.cookie.includes('access_token=');
+      // Check if we have a token in localStorage first
+      const hasToken = typeof window !== 'undefined' && localStorage.getItem('access_token');
       
       if (!hasToken) {
         // No token at all, redirect immediately

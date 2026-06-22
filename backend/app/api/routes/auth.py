@@ -118,11 +118,20 @@ async def refresh_token(token_data: TokenRefresh, db: Session = Depends(get_db))
             detail="Invalid token type"
         )
     
-    user_id = payload.get("sub")
-    if not user_id:
+    user_id_str = payload.get("sub")
+    if not user_id_str:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token"
+        )
+    
+    # Convert string to integer
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token format"
         )
     
     # Verify user exists and is active
