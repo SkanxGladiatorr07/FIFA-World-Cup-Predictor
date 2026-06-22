@@ -81,12 +81,12 @@ export const Sidebar = () => {
                 className={`
                   flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium
                   ${isActive
-                    ? 'bg-primary-container text-on-primary-fixed shadow-lg scale-105 font-bold'
+                    ? 'bg-[#f59e0b] text-[#1a1d2e] shadow-lg font-bold'
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-variant hover:scale-102'
                   }
                 `}
               >
-                <span className={isActive ? 'text-on-primary-fixed' : ''}>{item.icon}</span>
+                <span className={isActive ? 'text-[#1a1d2e]' : ''}>{item.icon}</span>
                 <span>{item.name}</span>
               </Link>
             );
