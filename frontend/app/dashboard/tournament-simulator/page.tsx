@@ -81,15 +81,18 @@ export default function TournamentSimulatorPage() {
 
         {/* Winner Probabilities */}
         <div>
-          <h4 className="text-lg font-bold text-on-surface mb-4">Winner Probabilities (Top 10)</h4>
+          <h4 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+            <span>🏆</span>
+            Winner Probabilities (Top 10)
+          </h4>
           <div className="space-y-3">
             {Object.entries(winnerProbs)
               .sort(([, a]: any, [, b]: any) => b - a)
               .slice(0, 10)
               .map(([team, prob]: any, index) => (
-                <div key={team} className="bg-surface-container-low rounded-xl p-4 border border-outline-variant hover:border-primary/50 transition-all">
+                <div key={team} className="bg-surface-container-low rounded-xl p-4 border-2 border-primary/20 hover:border-primary transition-all">
                   <div className="flex items-center gap-4 mb-2">
-                    <span className="w-8 h-8 flex items-center justify-center bg-primary-container text-on-primary-fixed text-sm font-bold rounded-lg">
+                    <span className="w-8 h-8 flex items-center justify-center bg-primary text-on-primary-fixed text-sm font-bold rounded-lg shadow-md">
                       #{index + 1}
                     </span>
                     <div className="flex-1">
@@ -99,7 +102,7 @@ export default function TournamentSimulatorPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="h-3 bg-surface-variant rounded-full overflow-hidden">
+                  <div className="h-3 bg-surface-variant rounded-full overflow-hidden border border-primary/20">
                     <div
                       className="h-full bg-gradient-to-r from-primary to-primary-fixed-dim transition-all duration-500 rounded-full"
                       style={{ width: `${prob}%` }}
@@ -113,14 +116,17 @@ export default function TournamentSimulatorPage() {
         {/* Finalist Probabilities */}
         {Object.keys(finalistProbs).length > 0 && (
           <div>
-            <h4 className="text-lg font-bold text-on-surface mb-4">Finalist Probabilities (Top 6)</h4>
+            <h4 className="text-lg font-bold text-secondary mb-4 flex items-center gap-2">
+              <span>🥈</span>
+              Finalist Probabilities (Top 6)
+            </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.entries(finalistProbs)
                 .sort(([, a]: any, [, b]: any) => b - a)
                 .slice(0, 6)
                 .map(([team, prob]: any) => (
-                  <div key={team} className="bg-surface-container-low rounded-xl p-5 border border-outline-variant">
-                    <p className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Finalist</p>
+                  <div key={team} className="bg-surface-container-low rounded-xl p-5 border-2 border-secondary/30 hover:border-secondary transition-all">
+                    <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">Finalist</p>
                     <p className="text-xl font-bold text-on-surface mb-1">{team}</p>
                     <p className="text-2xl font-bold text-secondary">{prob.toFixed(1)}%</p>
                   </div>
@@ -130,14 +136,17 @@ export default function TournamentSimulatorPage() {
         )}
 
         {/* Simulation Info */}
-        <div className="bg-surface-container-low rounded-xl p-5 border border-outline-variant">
-          <h4 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3">Simulation Details</h4>
+        <div className="bg-surface-container-low rounded-xl p-5 border-2 border-primary/30">
+          <h4 className="text-sm font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span>📊</span>
+            Simulation Details
+          </h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
+            <div className="p-3 bg-surface-container rounded-lg border border-primary/20">
               <p className="text-on-surface-variant mb-1">Simulations run</p>
               <p className="text-lg font-bold text-primary">{results.simulations_run?.toLocaleString()}</p>
             </div>
-            <div>
+            <div className="p-3 bg-surface-container rounded-lg border border-tertiary/20">
               <p className="text-on-surface-variant mb-1">Randomness factor</p>
               <p className="text-lg font-bold text-tertiary">{results.randomness_factor?.toFixed(2)}</p>
             </div>
@@ -173,13 +182,13 @@ export default function TournamentSimulatorPage() {
       </header>
 
       {/* Simulation Controls */}
-      <div className="glass-panel rounded-xl p-8 shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
+      <div className="glass-panel rounded-xl p-8 shadow-2xl border-2 border-primary/50">
+        <div className="flex items-center justify-between mb-6 pb-6 border-b-2 border-primary/30">
           <div>
-            <h3 className="text-2xl font-bold text-on-surface mb-2">Configure Simulation</h3>
+            <h3 className="text-2xl font-bold text-primary mb-2">Configure Simulation</h3>
             <p className="text-sm text-on-surface-variant">Adjust parameters to customize your tournament simulation</p>
           </div>
-          <svg className="w-12 h-12 text-primary opacity-50" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-12 h-12 text-primary" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
           </svg>
         </div>
@@ -187,11 +196,11 @@ export default function TournamentSimulatorPage() {
         <div className="space-y-6">
           {/* Simulation Name */}
           <div>
-            <label className="text-sm font-bold text-on-surface uppercase tracking-wider mb-3 block">
+            <label className="text-sm font-bold text-primary uppercase tracking-wider mb-3 block">
               Simulation Name (Optional)
             </label>
             <div className="relative">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
               </svg>
               <input
@@ -199,20 +208,20 @@ export default function TournamentSimulatorPage() {
                 placeholder="e.g., Conservative Prediction, Chaos Mode"
                 value={simulationName}
                 onChange={(e) => setSimulationName(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-surface-variant border-none rounded-xl text-on-surface text-base
-                         placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container
-                         transition-all duration-200"
+                className="w-full pl-12 pr-4 py-4 bg-surface-variant border-2 border-primary/30 rounded-xl text-base
+                         placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+                         transition-all duration-200 hover:border-primary/50"
               />
             </div>
           </div>
 
           {/* Number of Simulations */}
-          <div>
+          <div className="p-4 border-2 border-primary/30 rounded-xl bg-surface-container-low">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-bold text-on-surface uppercase tracking-wider">
+              <label className="text-sm font-bold text-primary uppercase tracking-wider">
                 Number of Simulations
               </label>
-              <span className="px-4 py-2 bg-primary-container text-on-primary-fixed font-bold text-lg rounded-lg">
+              <span className="px-4 py-2 bg-primary text-on-primary-fixed font-bold text-lg rounded-lg shadow-lg">
                 {numSimulations.toLocaleString()}
               </span>
             </div>
@@ -235,12 +244,12 @@ export default function TournamentSimulatorPage() {
           </div>
 
           {/* Randomness Factor */}
-          <div>
+          <div className="p-4 border-2 border-primary/30 rounded-xl bg-surface-container-low">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-bold text-on-surface uppercase tracking-wider">
+              <label className="text-sm font-bold text-tertiary uppercase tracking-wider">
                 Randomness Factor
               </label>
-              <span className="px-4 py-2 bg-tertiary-container text-on-tertiary-container font-bold text-lg rounded-lg">
+              <span className="px-4 py-2 bg-tertiary text-on-tertiary-container font-bold text-lg rounded-lg shadow-lg">
                 {randomnessFactor.toFixed(2)}
               </span>
             </div>
@@ -260,7 +269,7 @@ export default function TournamentSimulatorPage() {
               <span>🔒 0.0 (Predictable)</span>
               <span>🎲 0.5 (Chaotic)</span>
             </div>
-            <div className="mt-3 p-3 bg-surface-container-low rounded-lg">
+            <div className="mt-3 p-3 bg-surface-container rounded-lg border border-tertiary/20">
               <p className="text-sm text-on-surface-variant">
                 💡 Higher randomness makes upsets more likely, simulating real-world unpredictability and underdog victories
               </p>
@@ -333,19 +342,24 @@ export default function TournamentSimulatorPage() {
       {/* Previous Simulations */}
       {simulations.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold text-on-surface mb-6">Simulation History</h2>
+          <h2 className="text-2xl font-bold text-primary mb-6 flex items-center gap-3">
+            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+            </svg>
+            Simulation History
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {simulations.slice(0, 6).map((sim) => (
               <div
                 key={sim.id}
-                className="glass-panel rounded-xl p-6 cursor-pointer transition-all duration-300
-                         hover:border-primary/50 hover:shadow-xl hover:scale-105"
+                className="glass-panel rounded-xl p-6 cursor-pointer transition-all duration-300 border-2 border-primary/20
+                         hover:border-primary hover:shadow-2xl hover:scale-105 hover:bg-surface-container"
                 onClick={() => {
                   setCurrentSimulation(sim);
                   setShowBracket(false);
                 }}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-4 pb-4 border-b-2 border-primary/20">
                   <div className="flex-1">
                     <h4 className="font-bold text-on-surface text-lg mb-1">
                       {sim.simulation_name || `Simulation ${sim.id}`}
@@ -354,14 +368,15 @@ export default function TournamentSimulatorPage() {
                       {new Date(sim.created_at).toLocaleString()}
                     </p>
                   </div>
-                  <span className="px-3 py-1 bg-primary-container/20 text-primary text-xs font-bold rounded-lg">
+                  <span className="px-3 py-1 bg-primary text-on-primary-fixed text-xs font-bold rounded-lg shadow-md">
                     {sim.num_simulations?.toLocaleString()}
                   </span>
                 </div>
                 
                 {sim.results_json?.most_likely_winner && (
-                  <div className="bg-surface-container-low rounded-lg p-4 border border-outline-variant">
-                    <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">
+                  <div className="bg-surface-container-low rounded-lg p-4 border-2 border-primary/30">
+                    <p className="text-xs text-primary font-semibold uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <span>🏆</span>
                       Predicted Winner
                     </p>
                     <p className="text-2xl font-bold text-primary">{sim.results_json.most_likely_winner}</p>

@@ -66,7 +66,7 @@
     background: #ffc174;
   }
   
-  /* Fix input text colors globally */
+  /* Fix input text colors globally - BLACK TEXT */
   input[type="text"],
   input[type="email"],
   input[type="password"],
@@ -74,7 +74,7 @@
   input[type="search"],
   textarea,
   select {
-    color: #ffffff !important;
+    color: #000000 !important;
   }
   
   input[type="text"]::placeholder,
@@ -83,7 +83,7 @@
   input[type="number"]::placeholder,
   input[type="search"]::placeholder,
   textarea::placeholder {
-    color: #9ca3af !important;
+    color: #6b7280 !important;
   }
   
   /* Autofill background fix */
@@ -92,7 +92,13 @@
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #2f344b inset !important;
-    -webkit-text-fill-color: #ffffff !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+  
+  /* Select dropdown options */
+  select option {
+    color: #000000 !important;
+    background-color: #e5e7eb !important;
   }
   
   /* Card styles */

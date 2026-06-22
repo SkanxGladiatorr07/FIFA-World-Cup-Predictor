@@ -278,12 +278,12 @@ export default function MatchSimulatorPage() {
 
               {/* Simulation Results */}
               {simulationResult && (
-                <div className="glass-panel rounded-xl p-8 shadow-2xl border-primary-container/50">
+                <div className="glass-panel rounded-xl p-8 shadow-2xl border-2 border-[#f59e0b]">
                   <h3 className="text-2xl font-bold text-on-surface mb-6">Simulation Results</h3>
                   
                   {/* Outcome Probabilities */}
                   <div className="mb-8">
-                    <h4 className="text-base font-bold text-on-surface-variant uppercase tracking-wider mb-4">Match Outcome</h4>
+                    <h4 className="text-base font-bold text-[#f59e0b] uppercase tracking-wider mb-4">Match Outcome</h4>
                     <ProbabilityBar
                       probabilities={{
                         home_win: simulationResult.home_win_probability,
@@ -296,14 +296,14 @@ export default function MatchSimulatorPage() {
                   </div>
 
                   {/* Most Likely Score */}
-                  <div className="bg-gradient-to-br from-primary-container/30 to-primary-container/10 border-2 border-primary-container rounded-xl p-6 mb-8 shadow-lg">
-                    <h4 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4 text-center">Most Likely Score</h4>
+                  <div className="bg-gradient-to-br from-[#f59e0b]/30 to-[#f59e0b]/10 border-4 border-[#f59e0b] rounded-xl p-6 mb-8 shadow-lg">
+                    <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 text-center">Most Likely Score</h4>
                     <div className="flex items-center justify-center gap-6">
-                      <span className="text-6xl font-bold text-primary">
+                      <span className="text-6xl font-bold text-[#f59e0b]">
                         {simulationResult.most_likely_score.home}
                       </span>
-                      <span className="text-3xl text-on-surface-variant">-</span>
-                      <span className="text-6xl font-bold text-primary">
+                      <span className="text-3xl text-white">-</span>
+                      <span className="text-6xl font-bold text-[#f59e0b]">
                         {simulationResult.most_likely_score.away}
                       </span>
                     </div>
@@ -311,16 +311,16 @@ export default function MatchSimulatorPage() {
 
                   {/* Score Probabilities */}
                   <div>
-                    <h4 className="text-base font-bold text-on-surface-variant uppercase tracking-wider mb-4">Top 10 Score Probabilities</h4>
+                    <h4 className="text-base font-bold text-[#f59e0b] uppercase tracking-wider mb-4">Top 10 Score Probabilities</h4>
                     <div className="grid grid-cols-2 gap-3">
                       {Object.entries(simulationResult.score_probabilities)
                         .sort(([, a], [, b]) => b - a)
                         .slice(0, 10)
                         .map(([score, prob]) => (
-                          <div key={score} className="bg-surface-container-low rounded-xl p-4 border border-outline-variant">
+                          <div key={score} className="bg-[#1e2339] rounded-xl p-4 border-2 border-[#2d3349] hover:border-[#f59e0b] transition-all">
                             <div className="flex items-center justify-between">
-                              <span className="text-xl font-bold text-on-surface">{score}</span>
-                              <span className="text-base font-bold text-primary">{prob.toFixed(1)}%</span>
+                              <span className="text-xl font-bold text-white">{score}</span>
+                              <span className="text-base font-bold text-[#f59e0b]">{prob.toFixed(1)}%</span>
                             </div>
                           </div>
                         ))}

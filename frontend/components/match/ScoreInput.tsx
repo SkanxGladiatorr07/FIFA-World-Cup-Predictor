@@ -51,14 +51,14 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
   };
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center justify-center gap-1 ${className}`}>
       {/* Decrement Button */}
       <button
         type="button"
         onClick={decrement}
         disabled={disabled || value <= min}
-        className="w-8 h-8 rounded-md bg-dark-600 hover:bg-dark-500 disabled:opacity-50 disabled:cursor-not-allowed
-                   flex items-center justify-center text-white font-bold transition-colors"
+        className="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#ffc174] disabled:opacity-30 disabled:cursor-not-allowed
+                   flex items-center justify-center text-[#1a1d2e] font-bold transition-colors text-lg"
       >
         -
       </button>
@@ -71,10 +71,11 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
         min={min}
         max={max}
         disabled={disabled}
-        className="w-16 h-10 text-center text-2xl font-bold bg-dark-600 border border-dark-500 rounded-md
-                   text-white focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent
+        className="w-12 h-9 text-center text-xl font-bold bg-[#1a1d2e] border-2 border-[#f59e0b] rounded-lg
+                   text-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b] focus:border-[#ffc174]
                    disabled:opacity-50 disabled:cursor-not-allowed [appearance:textfield]
                    [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        style={{ color: '#ffffff' }}
       />
 
       {/* Increment Button */}
@@ -82,8 +83,8 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
         type="button"
         onClick={increment}
         disabled={disabled || value >= max}
-        className="w-8 h-8 rounded-md bg-dark-600 hover:bg-dark-500 disabled:opacity-50 disabled:cursor-not-allowed
-                   flex items-center justify-center text-white font-bold transition-colors"
+        className="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#ffc174] disabled:opacity-30 disabled:cursor-not-allowed
+                   flex items-center justify-center text-[#1a1d2e] font-bold transition-colors text-lg"
       >
         +
       </button>

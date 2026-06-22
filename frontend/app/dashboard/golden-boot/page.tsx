@@ -172,7 +172,7 @@ export default function GoldenBootPage() {
                 placeholder="Search players..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-surface-variant border-none rounded-xl text-white
+                className="w-full pl-12 pr-4 py-3 bg-surface-variant border-none rounded-xl
                          placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container
                          transition-all duration-200 text-base"
               />
@@ -188,7 +188,7 @@ export default function GoldenBootPage() {
           <select
             value={selectedPlayerId || ''}
             onChange={(e) => setSelectedPlayerId(e.target.value ? Number(e.target.value) : null)}
-            className="w-full px-4 py-3 bg-surface-variant border-none rounded-xl text-white
+            className="w-full px-4 py-3 bg-surface-variant border-none rounded-xl
                      focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer
                      transition-all duration-200 text-base font-medium"
           >
