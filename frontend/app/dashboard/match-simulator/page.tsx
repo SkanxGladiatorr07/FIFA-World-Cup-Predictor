@@ -67,38 +67,48 @@ export default function MatchSimulatorPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+      <div className="flex flex-col items-center justify-center py-32 gap-6">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-surface-variant border-t-primary"></div>
+          <svg className="absolute inset-0 m-auto w-10 h-10 text-primary animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" opacity="0.3"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <p className="text-on-surface-variant font-medium text-lg">Loading matches...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Match Simulator ⚽</h1>
-        <p className="text-gray-400">
-          Simulate individual matches to see detailed score probabilities
+    <div className="space-y-12">
+      {/* Header Section */}
+      <header>
+        <h1 className="text-4xl md:text-5xl font-bold text-primary mb-3 tracking-tight">
+          Match Simulator
+        </h1>
+        <p className="text-lg text-on-surface-variant font-medium">
+          Simulate individual matches to see detailed score probabilities and outcomes
         </p>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Match Selection */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="card bg-dark-800 border border-dark-700">
-            <h3 className="text-lg font-semibold text-white mb-4">Select Match</h3>
+        <div className="lg:col-span-1 space-y-6">
+          <div className="glass-panel rounded-xl p-6 shadow-2xl">
+            <h3 className="text-xl font-bold text-on-surface mb-4">Select Match</h3>
             
             {/* Stage Filter */}
-            <div className="mb-4">
-              <label className="text-sm font-medium text-gray-300 mb-2 block">
+            <div className="mb-6">
+              <label className="text-sm font-bold text-on-surface uppercase tracking-wider mb-3 block">
                 Filter by Stage
               </label>
               <select
                 value={filterStage}
                 onChange={(e) => setFilterStage(e.target.value)}
-                className="w-full px-3 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white text-sm
-                         focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent"
+                className="w-full px-4 py-3 bg-surface-variant border-none rounded-xl text-on-surface
+                         focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer
+                         transition-all duration-200 font-medium"
               >
                 <option value="all">All Stages</option>
                 {availableStages.map((stage) => (
@@ -108,7 +118,7 @@ export default function MatchSimulatorPage() {
             </div>
 
             {/* Match List */}
-            <div className="space-y-2 max-h-[600px] overflow-y-auto">
+            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
               {filteredMatches.map((match) => (
                 <div
                   key={match.id}
@@ -116,26 +126,28 @@ export default function MatchSimulatorPage() {
                     setSelectedMatch(match);
                     setSimulationResult(null);
                   }}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 ${
                     selectedMatch?.id === match.id
-                      ? 'bg-gold/20 border-gold'
-                      : 'bg-dark-700 border-dark-600 hover:border-gold/50'
+                      ? 'bg-primary-container/20 border-primary-container shadow-lg scale-105'
+                      : 'bg-surface-container-low border-outline-variant hover:border-primary/50 hover:shadow-md'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-400">Match #{match.match_number}</span>
+                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                      Match #{match.match_number}
+                    </span>
                     {match.group_letter && (
-                      <span className="text-xs badge badge-sm bg-dark-600 text-gray-400">
+                      <span className="text-xs px-2 py-1 bg-surface-variant text-on-surface-variant rounded font-bold">
                         Group {match.group_letter}
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-medium text-white">{match.home_team.code}</span>
-                    <span className="text-gray-500">vs</span>
-                    <span className="font-medium text-white">{match.away_team.code}</span>
+                  <div className="flex items-center gap-2 text-sm mb-2">
+                    <span className="font-bold text-on-surface">{match.home_team.code}</span>
+                    <span className="text-on-surface-variant">vs</span>
+                    <span className="font-bold text-on-surface">{match.away_team.code}</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-on-surface-variant font-medium">
                     {format(new Date(match.match_date), 'MMM d, yyyy')}
                   </p>
                 </div>
@@ -145,53 +157,72 @@ export default function MatchSimulatorPage() {
         </div>
 
         {/* Simulation Panel */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-6">
           {!selectedMatch ? (
-            <div className="card bg-dark-800 border border-dark-700 text-center py-20">
-              <div className="text-6xl mb-4">⚽</div>
-              <h3 className="text-xl font-semibold text-white mb-2">Select a Match</h3>
-              <p className="text-gray-400">
-                Choose a match from the list to run a simulation
-              </p>
+            <div className="glass-panel rounded-2xl text-center py-32 px-8 shadow-2xl">
+              <div className="max-w-md mx-auto space-y-6">
+                <div className="w-24 h-24 mx-auto bg-surface-container rounded-full flex items-center justify-center">
+                  <svg className="w-14 h-14 text-on-surface-variant opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-on-surface mb-3">Select a Match to Simulate</h3>
+                  <p className="text-on-surface-variant text-base leading-relaxed">
+                    Choose a match from the list to run a detailed simulation with score probabilities and outcome predictions
+                  </p>
+                </div>
+              </div>
             </div>
           ) : (
             <>
               {/* Selected Match Info */}
-              <div className="card bg-dark-800 border border-dark-700">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-white mb-2">
+              <div className="glass-panel rounded-xl p-8 shadow-2xl">
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold text-on-surface mb-3">
                     {selectedMatch.home_team.name} vs {selectedMatch.away_team.name}
                   </h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-base text-on-surface-variant font-medium">
                     {format(new Date(selectedMatch.match_date), 'EEEE, MMMM d, yyyy • h:mm a')}
                   </p>
                   {selectedMatch.venue && (
-                    <p className="text-xs text-gray-500 mt-1">{selectedMatch.venue}</p>
+                    <p className="text-sm text-on-surface-variant/70 mt-2">📍 {selectedMatch.venue}</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-2 gap-8 mb-8">
                   <div className="text-center">
-                    <div className="w-24 h-24 rounded-full mx-auto mb-3 flex items-center justify-center text-4xl font-bold"
-                         style={{ backgroundColor: selectedMatch.home_team.primary_color + '20' }}>
+                    <div className="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-bold shadow-lg border-4"
+                         style={{ 
+                           backgroundColor: selectedMatch.home_team.primary_color + '20',
+                           borderColor: selectedMatch.home_team.primary_color + '40'
+                         }}>
                       {selectedMatch.home_team.code}
                     </div>
-                    <h4 className="font-semibold text-white">{selectedMatch.home_team.name}</h4>
+                    <h4 className="font-bold text-on-surface text-lg">{selectedMatch.home_team.name}</h4>
                   </div>
                   <div className="text-center">
-                    <div className="w-24 h-24 rounded-full mx-auto mb-3 flex items-center justify-center text-4xl font-bold"
-                         style={{ backgroundColor: selectedMatch.away_team.primary_color + '20' }}>
+                    <div className="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-bold shadow-lg border-4"
+                         style={{ 
+                           backgroundColor: selectedMatch.away_team.primary_color + '20',
+                           borderColor: selectedMatch.away_team.primary_color + '40'
+                         }}>
                       {selectedMatch.away_team.code}
                     </div>
-                    <h4 className="font-semibold text-white">{selectedMatch.away_team.name}</h4>
+                    <h4 className="font-bold text-on-surface text-lg">{selectedMatch.away_team.name}</h4>
                   </div>
                 </div>
 
                 {/* Simulation Controls */}
-                <div className="border-t border-dark-700 pt-4">
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
-                    Number of Simulations: {numSimulations.toLocaleString()}
-                  </label>
+                <div className="border-t border-outline-variant pt-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-sm font-bold text-on-surface uppercase tracking-wider">
+                      Number of Simulations
+                    </label>
+                    <span className="px-4 py-2 bg-primary-container text-on-primary-fixed font-bold text-lg rounded-lg">
+                      {numSimulations.toLocaleString()}
+                    </span>
+                  </div>
                   <input
                     type="range"
                     min="10"
@@ -199,30 +230,48 @@ export default function MatchSimulatorPage() {
                     step="10"
                     value={numSimulations}
                     onChange={(e) => setNumSimulations(parseInt(e.target.value))}
-                    className="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-gold mb-4"
+                    className="w-full h-3 bg-surface-variant rounded-lg appearance-none cursor-pointer mb-6"
+                    style={{
+                      background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${((numSimulations - 10) / (10000 - 10)) * 100}%, #2f344b ${((numSimulations - 10) / (10000 - 10)) * 100}%, #2f344b 100%)`
+                    }}
                   />
                   
                   <Button
                     onClick={handleSimulateMatch}
                     variant="primary"
                     size="lg"
-                    className="w-full"
+                    className="w-full text-base font-bold py-4"
                     isLoading={isSimulating}
                     disabled={isSimulating}
                   >
-                    {isSimulating ? 'Simulating...' : 'Run Simulation'}
+                    {isSimulating ? (
+                      <span className="flex items-center gap-3 justify-center">
+                        <svg className="animate-spin w-6 h-6" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                        </svg>
+                        Simulating Match...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-3 justify-center">
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Run Simulation
+                      </span>
+                    )}
                   </Button>
                 </div>
               </div>
 
               {/* Simulation Results */}
               {simulationResult && (
-                <div className="card bg-dark-800 border border-gold/50">
-                  <h3 className="text-lg font-semibold text-white mb-4">Simulation Results</h3>
+                <div className="glass-panel rounded-xl p-8 shadow-2xl border-primary-container/50">
+                  <h3 className="text-2xl font-bold text-on-surface mb-6">Simulation Results</h3>
                   
                   {/* Outcome Probabilities */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-400 mb-3">Match Outcome</h4>
+                  <div className="mb-8">
+                    <h4 className="text-base font-bold text-on-surface-variant uppercase tracking-wider mb-4">Match Outcome</h4>
                     <ProbabilityBar
                       probabilities={{
                         home_win: simulationResult.home_win_probability,
@@ -235,14 +284,14 @@ export default function MatchSimulatorPage() {
                   </div>
 
                   {/* Most Likely Score */}
-                  <div className="bg-gradient-to-r from-gold/20 to-gold/5 border border-gold/50 rounded-lg p-4 mb-6">
-                    <h4 className="text-sm font-semibold text-gray-400 mb-2">Most Likely Score</h4>
-                    <div className="flex items-center justify-center gap-4">
-                      <span className="text-4xl font-bold text-white">
+                  <div className="bg-gradient-to-br from-primary-container/30 to-primary-container/10 border-2 border-primary-container rounded-xl p-6 mb-8 shadow-lg">
+                    <h4 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4 text-center">Most Likely Score</h4>
+                    <div className="flex items-center justify-center gap-6">
+                      <span className="text-6xl font-bold text-primary">
                         {simulationResult.most_likely_score.home}
                       </span>
-                      <span className="text-2xl text-gray-500">-</span>
-                      <span className="text-4xl font-bold text-white">
+                      <span className="text-3xl text-on-surface-variant">-</span>
+                      <span className="text-6xl font-bold text-primary">
                         {simulationResult.most_likely_score.away}
                       </span>
                     </div>
@@ -250,23 +299,23 @@ export default function MatchSimulatorPage() {
 
                   {/* Score Probabilities */}
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-400 mb-3">Top 10 Score Probabilities</h4>
-                    <div className="grid grid-cols-2 gap-2">
+                    <h4 className="text-base font-bold text-on-surface-variant uppercase tracking-wider mb-4">Top 10 Score Probabilities</h4>
+                    <div className="grid grid-cols-2 gap-3">
                       {Object.entries(simulationResult.score_probabilities)
                         .sort(([, a], [, b]) => b - a)
                         .slice(0, 10)
                         .map(([score, prob]) => (
-                          <div key={score} className="bg-dark-700 rounded-lg p-3">
+                          <div key={score} className="bg-surface-container-low rounded-xl p-4 border border-outline-variant">
                             <div className="flex items-center justify-between">
-                              <span className="text-lg font-bold text-white">{score}</span>
-                              <span className="text-sm font-semibold text-gold">{prob.toFixed(1)}%</span>
+                              <span className="text-xl font-bold text-on-surface">{score}</span>
+                              <span className="text-base font-bold text-primary">{prob.toFixed(1)}%</span>
                             </div>
                           </div>
                         ))}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-dark-700 text-xs text-gray-400">
+                  <div className="mt-6 pt-6 border-t border-outline-variant text-sm text-on-surface-variant">
                     Based on {numSimulations.toLocaleString()} simulations
                   </div>
                 </div>

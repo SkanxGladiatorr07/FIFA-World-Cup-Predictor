@@ -52,47 +52,50 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const isTBD = match.home_team.name === 'TBD' || match.away_team.name === 'TBD';
 
   return (
-    <div className="card bg-dark-800 border border-dark-700 hover:border-gold/50 transition-all duration-300">
+    <div className="glass-panel rounded-xl shadow-2xl hover:border-primary/50 transition-all duration-300 hover:scale-[1.02]">
       {/* Match Header */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-dark-700">
-        <div className="flex items-center gap-2">
-          <span className="badge badge-sm bg-dark-700 text-gray-400">
+      <div className="flex items-center justify-between mb-5 pb-4 border-b border-outline-variant">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="px-3 py-1 bg-surface-container text-on-surface-variant text-xs font-bold rounded-lg uppercase tracking-wider">
             {match.match_stage || 'Group'}
           </span>
           {match.group_letter && (
-            <span className="badge badge-sm bg-gold/20 text-gold">
+            <span className="px-3 py-1 bg-primary-container/20 text-primary text-xs font-bold rounded-lg">
               Group {match.group_letter}
             </span>
           )}
-          <span className="text-xs text-gray-500">Match #{match.match_number}</span>
+          <span className="text-xs text-on-surface-variant font-semibold">Match #{match.match_number}</span>
         </div>
         
         {match.is_completed && (
-          <span className="badge badge-sm bg-success/20 text-success">
-            Final
+          <span className="px-3 py-1 bg-tertiary-container/20 text-tertiary text-xs font-bold rounded-lg">
+            FINAL
           </span>
         )}
       </div>
 
       {/* Teams Display */}
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-4">
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-center mb-5">
         {/* Home Team */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2 text-3xl font-bold"
-               style={{ backgroundColor: match.home_team.primary_color + '20' }}>
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-2"
+               style={{ 
+                 backgroundColor: match.home_team.primary_color + '20',
+                 borderColor: match.home_team.primary_color + '40'
+               }}>
             {match.home_team.code}
           </div>
-          <h3 className="font-semibold text-white">{match.home_team.name}</h3>
+          <h3 className="font-bold text-on-surface text-base">{match.home_team.name}</h3>
           {match.is_completed && match.home_score !== null && (
-            <span className="text-2xl font-bold text-gold mt-1">{match.home_score}</span>
+            <span className="text-3xl font-bold text-primary mt-2">{match.home_score}</span>
           )}
         </div>
 
         {/* VS Divider */}
         <div className="flex flex-col items-center">
-          <span className="text-gray-400 text-sm font-semibold">VS</span>
+          <span className="text-on-surface-variant text-base font-bold">VS</span>
           {!match.is_completed && !isTBD && (
-            <span className="text-xs text-gray-500 mt-1">
+            <span className="text-xs text-on-surface-variant/70 mt-1 font-semibold">
               {format(matchDate, 'MMM d')}
             </span>
           )}
@@ -100,31 +103,34 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
         {/* Away Team */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2 text-3xl font-bold"
-               style={{ backgroundColor: match.away_team.primary_color + '20' }}>
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-2"
+               style={{ 
+                 backgroundColor: match.away_team.primary_color + '20',
+                 borderColor: match.away_team.primary_color + '40'
+               }}>
             {match.away_team.code}
           </div>
-          <h3 className="font-semibold text-white">{match.away_team.name}</h3>
+          <h3 className="font-bold text-on-surface text-base">{match.away_team.name}</h3>
           {match.is_completed && match.away_score !== null && (
-            <span className="text-2xl font-bold text-gold mt-1">{match.away_score}</span>
+            <span className="text-3xl font-bold text-primary mt-2">{match.away_score}</span>
           )}
         </div>
       </div>
 
       {/* Match Details */}
-      <div className="text-center mb-4 pb-4 border-b border-dark-700">
-        <p className="text-sm text-gray-400">
+      <div className="text-center mb-5 pb-4 border-b border-outline-variant">
+        <p className="text-sm text-on-surface-variant font-medium">
           {format(matchDate, 'EEEE, MMMM d, yyyy • h:mm a')}
         </p>
         {match.venue && (
-          <p className="text-xs text-gray-500 mt-1">{match.venue}</p>
+          <p className="text-xs text-on-surface-variant/70 mt-1">📍 {match.venue}</p>
         )}
       </div>
 
       {/* AI Probabilities - Show for all matches except TBD */}
       {!isTBD && aiProbabilities && (
-        <div className="mb-4">
-          <h4 className="text-xs font-semibold text-gray-400 mb-2">AI Prediction</h4>
+        <div className="mb-5">
+          <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">AI Prediction</h4>
           <ProbabilityBar
             probabilities={aiProbabilities}
             homeTeamColor={match.home_team.primary_color}
@@ -137,29 +143,29 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       {!isTBD && showPredictionForm && (
         <div>
           {userPrediction && !showForm ? (
-            <div className="bg-dark-700 rounded-lg p-3">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-semibold text-gray-400">Your Prediction</span>
+            <div className="bg-surface-container-low rounded-xl p-4 border border-outline-variant">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Your Prediction</span>
                 <button
                   onClick={() => setShowForm(true)}
-                  className="text-xs text-gold hover:text-gold-light"
+                  className="text-xs text-primary hover:text-primary-fixed-dim font-bold transition-colors"
                 >
                   Edit
                 </button>
               </div>
               <div className="flex items-center justify-center gap-4">
-                <span className="text-2xl font-bold text-white">{userPrediction.predicted_home_score}</span>
-                <span className="text-gray-500">-</span>
-                <span className="text-2xl font-bold text-white">{userPrediction.predicted_away_score}</span>
+                <span className="text-3xl font-bold text-primary">{userPrediction.predicted_home_score}</span>
+                <span className="text-on-surface-variant text-xl">-</span>
+                <span className="text-3xl font-bold text-primary">{userPrediction.predicted_away_score}</span>
               </div>
             </div>
           ) : (
-            <div className="bg-dark-700 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-gray-300 mb-3">Make Your Prediction</h4>
+            <div className="bg-surface-container-low rounded-xl p-5 border border-outline-variant">
+              <h4 className="text-sm font-bold text-on-surface mb-4">Make Your Prediction</h4>
               
-              <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-4">
+              <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-5">
                 <div>
-                  <label className="text-xs text-gray-400 block mb-1">{match.home_team.code}</label>
+                  <label className="text-xs text-on-surface-variant block mb-2 font-semibold">{match.home_team.code}</label>
                   <ScoreInput
                     value={homeScore}
                     onChange={setHomeScore}
@@ -168,10 +174,10 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                   />
                 </div>
                 
-                <span className="text-gray-500 mt-5">-</span>
+                <span className="text-on-surface-variant mt-5 text-xl">-</span>
                 
                 <div>
-                  <label className="text-xs text-gray-400 block mb-1">{match.away_team.code}</label>
+                  <label className="text-xs text-on-surface-variant block mb-2 font-semibold">{match.away_team.code}</label>
                   <ScoreInput
                     value={awayScore}
                     onChange={setAwayScore}
@@ -186,7 +192,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                   onClick={handleSubmit}
                   variant="primary"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 font-bold"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
@@ -213,15 +219,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
       {/* TBD Message */}
       {isTBD && (
-        <div className="text-center py-3 bg-dark-700 rounded-lg">
-          <p className="text-sm text-gray-400">Teams to be determined after group stage</p>
+        <div className="text-center py-4 bg-surface-container-low rounded-xl border border-outline-variant">
+          <p className="text-sm text-on-surface-variant font-medium">Teams to be determined after group stage</p>
         </div>
       )}
 
       {/* Completed Match Message */}
       {match.is_completed && (
-        <div className="text-center py-2 bg-success/10 rounded-lg">
-          <p className="text-xs text-success font-semibold">Match Completed</p>
+        <div className="text-center py-3 bg-tertiary-container/20 rounded-xl border border-tertiary-container/30 mt-4">
+          <p className="text-xs text-tertiary font-bold uppercase tracking-wider">Match Completed</p>
         </div>
       )}
     </div>
