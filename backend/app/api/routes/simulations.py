@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 from app.db.database import get_db
-from app.models.simulation import Simulation
+from app.models.prediction import Simulation
 from app.models.match import Match
 from app.models.team import Team
 from app.models.user import User
