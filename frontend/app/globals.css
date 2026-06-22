@@ -77,6 +77,13 @@
     color: #000000 !important;
   }
   
+  /* Exception: White text for auth pages (login/register) */
+  .auth-page input[type="text"],
+  .auth-page input[type="email"],
+  .auth-page input[type="password"] {
+    color: #ffffff !important;
+  }
+  
   input[type="text"]::placeholder,
   input[type="email"]::placeholder,
   input[type="password"]::placeholder,
@@ -93,6 +100,15 @@
   input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #2f344b inset !important;
     -webkit-text-fill-color: #000000 !important;
+  }
+  
+  /* Autofill for auth pages */
+  .auth-page input:-webkit-autofill,
+  .auth-page input:-webkit-autofill:hover,
+  .auth-page input:-webkit-autofill:focus,
+  .auth-page input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1f2937 inset !important;
+    -webkit-text-fill-color: #ffffff !important;
   }
   
   /* Select dropdown options */

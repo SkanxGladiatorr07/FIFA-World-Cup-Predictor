@@ -161,8 +161,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             <div className="bg-[#2d3349] rounded-xl p-5 border-2 border-[#f59e0b]">
               <h4 className="text-sm font-bold text-white mb-4">Make Your Prediction</h4>
               
-              <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-5">
-                <div>
+              <div className="flex items-center justify-center gap-3 mb-5">
+                <div className="flex flex-col items-center">
                   <label className="text-xs text-gray-400 block mb-2 font-semibold">{match.home_team.code}</label>
                   <ScoreInput
                     value={homeScore}
@@ -172,9 +172,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                   />
                 </div>
                 
-                <span className="text-gray-500 mt-5 text-xl">-</span>
+                <span className="text-gray-400 mt-6 text-2xl font-bold">-</span>
                 
-                <div>
+                <div className="flex flex-col items-center">
                   <label className="text-xs text-gray-400 block mb-2 font-semibold">{match.away_team.code}</label>
                   <ScoreInput
                     value={awayScore}
