@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.routes import auth, users, teams, matches
+from app.api.routes import auth, users, teams, matches, players, simulations
 
 # Create FastAPI app
 app = FastAPI(
@@ -39,6 +39,8 @@ app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
 app.include_router(teams.router, prefix="/api/v1")
 app.include_router(matches.router, prefix="/api/v1")
+app.include_router(players.router, prefix="/api/v1")
+app.include_router(simulations.router, prefix="/api/v1")
 
 
 @app.get("/")
