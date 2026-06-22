@@ -121,8 +121,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         )}
       </div>
 
-      {/* AI Probabilities */}
-      {!isTBD && !match.is_completed && aiProbabilities && (
+      {/* AI Probabilities - Show for all matches except TBD */}
+      {!isTBD && aiProbabilities && (
         <div className="mb-4">
           <h4 className="text-xs font-semibold text-gray-400 mb-2">AI Prediction</h4>
           <ProbabilityBar
@@ -133,8 +133,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         </div>
       )}
 
-      {/* User Prediction Section */}
-      {!isTBD && !match.is_completed && showPredictionForm && (
+      {/* User Prediction Section - Allow for all matches except TBD */}
+      {!isTBD && showPredictionForm && (
         <div>
           {userPrediction && !showForm ? (
             <div className="bg-dark-700 rounded-lg p-3">

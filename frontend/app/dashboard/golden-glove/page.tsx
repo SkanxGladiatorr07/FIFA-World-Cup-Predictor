@@ -8,14 +8,32 @@ import toast from 'react-hot-toast';
 
 export default function GoldenGlovePage() {
   const [players, setPlayers] = useState<PlayerStats[]>([]);
+  const [filteredPlayers, setFilteredPlayers] = useState<PlayerStats[]>([]);
   const [myPrediction, setMyPrediction] = useState<GoldenGlovePrediction | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Filter players based on search query
+    if (searchQuery.trim() === '') {
+      setFilteredPlayers(players);
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = players.filter(
+        (ps) =>
+          ps.player.name.toLowerCase().includes(query) ||
+          ps.player.team_code.toLowerCase().includes(query) ||
+          ps.player.club.toLowerCase().includes(query)
+      );
+      setFilteredPlayers(filtered);
+    }
+  }, [searchQuery, players]);
 
   const fetchData = async () => {
     try {
@@ -25,6 +43,7 @@ export default function GoldenGlovePage() {
         apiClient.getMyGoldenGlovePrediction(),
       ]);
       setPlayers(playersData);
+      setFilteredPlayers(playersData);
       setMyPrediction(predictionData);
       if (predictionData) {
         setSelectedPlayerId(predictionData.player_id);
@@ -112,10 +131,23 @@ export default function GoldenGlovePage() {
 
       {/* Players List */}
       <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Top Goalkeepers</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-white">Top Goalkeepers</h2>
+          <div className="w-64">
+            <input
+              type="text"
+              placeholder="Search goalkeepers..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white text-sm
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                       placeholder-gray-500"
+            />
+          </div>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {players.map((playerStat) => {
+          {filteredPlayers.map((playerStat) => {
             const player = playerStat.player;
             const isSelected = selectedPlayerId === player.id;
             const isMyPrediction = myPrediction?.player_id === player.id;

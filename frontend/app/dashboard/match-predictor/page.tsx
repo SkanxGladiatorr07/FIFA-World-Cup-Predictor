@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { MatchCard } from '@/components/match/MatchCard';
-import { MatchWithTeams, MatchPredictionCreate } from '@/lib/types';
+import { MatchWithTeams, MatchPredictionCreate, MatchWithPrediction } from '@/lib/types';
 import { apiClient } from '@/lib/api-client';
 import toast from 'react-hot-toast';
 
 export default function MatchPredictorPage() {
   const [matches, setMatches] = useState<MatchWithTeams[]>([]);
+  const [matchDetails, setMatchDetails] = useState<Map<number, MatchWithPrediction>>(new Map());
   const [filteredMatches, setFilteredMatches] = useState<MatchWithTeams[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [availableStages, setAvailableStages] = useState<string[]>([]);
@@ -27,6 +28,13 @@ export default function MatchPredictorPage() {
     applyFilters();
   }, [matches, selectedStage, selectedGroup, searchQuery]);
 
+  // Fetch match details (with AI probabilities and user predictions) when matches change
+  useEffect(() => {
+    if (filteredMatches.length > 0) {
+      fetchMatchDetails();
+    }
+  }, [filteredMatches]);
+
   const fetchMatches = async () => {
     try {
       setIsLoading(true);
@@ -37,6 +45,32 @@ export default function MatchPredictorPage() {
       console.error('Error fetching matches:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchMatchDetails = async () => {
+    try {
+      // Fetch details for visible matches only (first 20 to avoid overload)
+      const matchesToFetch = filteredMatches.slice(0, 20);
+      const detailsPromises = matchesToFetch.map(match => 
+        apiClient.getMatch(match.id).catch(err => {
+          console.error(`Failed to fetch details for match ${match.id}:`, err);
+          return null;
+        })
+      );
+      
+      const details = await Promise.all(detailsPromises);
+      const detailsMap = new Map<number, MatchWithPrediction>();
+      
+      details.forEach((detail) => {
+        if (detail) {
+          detailsMap.set(detail.id, detail);
+        }
+      });
+      
+      setMatchDetails(detailsMap);
+    } catch (error) {
+      console.error('Error fetching match details:', error);
     }
   };
 
@@ -83,7 +117,13 @@ export default function MatchPredictorPage() {
 
   const handlePredictionSubmit = async (matchId: number, prediction: MatchPredictionCreate) => {
     await apiClient.createOrUpdatePrediction(matchId, prediction);
-    // Optionally refetch the specific match to update prediction
+    // Refetch the specific match details to update the prediction display
+    try {
+      const updatedMatch = await apiClient.getMatch(matchId);
+      setMatchDetails(prev => new Map(prev).set(matchId, updatedMatch));
+    } catch (error) {
+      console.error('Failed to refetch match details:', error);
+    }
   };
 
   return (
@@ -190,14 +230,19 @@ export default function MatchPredictorPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredMatches.map((match) => (
-            <MatchCard
-              key={match.id}
-              match={match}
-              onPredictSubmit={handlePredictionSubmit}
-              showPredictionForm={true}
-            />
-          ))}
+          {filteredMatches.map((match) => {
+            const details = matchDetails.get(match.id);
+            return (
+              <MatchCard
+                key={match.id}
+                match={match}
+                aiProbabilities={details?.ai_probabilities}
+                userPrediction={details?.user_prediction}
+                onPredictSubmit={handlePredictionSubmit}
+                showPredictionForm={true}
+              />
+            );
+          })}
         </div>
       )}
     </div>

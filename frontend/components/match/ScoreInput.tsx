@@ -18,7 +18,22 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
   className = '',
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(e.target.value) || 0;
+    const inputValue = e.target.value;
+    
+    // Allow empty string for clearing
+    if (inputValue === '') {
+      onChange(0);
+      return;
+    }
+    
+    const newValue = parseInt(inputValue);
+    
+    // If not a valid number, ignore the input
+    if (isNaN(newValue)) {
+      return;
+    }
+    
+    // Clamp the value between min and max
     const clampedValue = Math.max(min, Math.min(max, newValue));
     onChange(clampedValue);
   };
