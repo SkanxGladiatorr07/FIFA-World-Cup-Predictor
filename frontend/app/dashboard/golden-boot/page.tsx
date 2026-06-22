@@ -76,54 +76,83 @@ export default function GoldenBootPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+      <div className="flex flex-col items-center justify-center py-32 gap-6">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-surface-variant border-t-primary"></div>
+          <svg className="absolute inset-0 m-auto w-10 h-10 text-primary animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" opacity="0.3"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <p className="text-on-surface-variant font-medium text-lg">Loading players...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Golden Boot Predictor 🥇</h1>
-        <p className="text-gray-400">
-          Predict which player will score the most goals in the tournament
-        </p>
-      </div>
-
-      {/* Current Prediction Card */}
-      {myPrediction && (
-        <div className="card bg-gradient-to-r from-gold/20 to-gold/5 border border-gold/50">
-          <div className="flex items-center justify-between">
+    <div className="space-y-12">
+      {/* Header Section */}
+      <header className="flex justify-between items-end flex-wrap gap-6">
+        <div>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-3 tracking-tight">
+            Golden Boot Predictor
+          </h1>
+          <p className="text-lg text-on-surface-variant font-medium">
+            Predict which player will score the most goals in the tournament
+          </p>
+        </div>
+        {myPrediction && (
+          <div className="flex items-center gap-3 bg-primary-container px-5 py-3 rounded-xl shadow-lg">
+            <svg className="w-8 h-8 text-on-primary-fixed" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
             <div>
-              <h3 className="text-sm font-semibold text-gray-400 mb-1">Your Prediction</h3>
-              <p className="text-2xl font-bold text-gold">{myPrediction.player_name}</p>
-              <p className="text-sm text-gray-400 mt-1">{myPrediction.team_name}</p>
+              <span className="text-xs font-semibold text-on-primary-fixed/70 uppercase tracking-wider block">Your Prediction</span>
+              <span className="text-sm font-bold text-on-primary-fixed">{myPrediction.player_name}</span>
             </div>
-            <div className="text-6xl">⚽</div>
+          </div>
+        )}
+      </header>
+
+      {/* Current Prediction Card - Large Display */}
+      {myPrediction && (
+        <div className="glass-panel rounded-2xl p-8 shadow-2xl bg-gradient-to-br from-primary-container/30 to-transparent border-primary-container">
+          <div className="flex items-center justify-between flex-wrap gap-6">
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider">
+                Your Golden Boot Pick
+              </h3>
+              <p className="text-4xl font-bold text-primary tracking-tight">{myPrediction.player_name}</p>
+              <p className="text-base text-on-surface-variant font-medium">{myPrediction.team_name}</p>
+            </div>
+            <div className="text-8xl opacity-20">⚽</div>
           </div>
         </div>
       )}
 
       {/* Instructions */}
-      <div className="card bg-dark-800 border border-dark-700">
-        <h3 className="text-lg font-semibold text-white mb-2">How it works</h3>
-        <ul className="space-y-2 text-sm text-gray-400">
-          <li className="flex items-start gap-2">
-            <span className="text-gold">•</span>
+      <div className="glass-panel rounded-xl p-8 shadow-lg">
+        <h3 className="text-xl font-bold text-on-surface mb-4 flex items-center gap-3">
+          <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          </svg>
+          How it works
+        </h3>
+        <ul className="space-y-3 text-base text-on-surface-variant">
+          <li className="flex items-start gap-3">
+            <span className="text-primary text-xl font-bold">1</span>
             <span>Review the list of top forwards based on current season statistics</span>
           </li>
-          <li className="flex items-start gap-2">
-            <span className="text-gold">•</span>
+          <li className="flex items-start gap-3">
+            <span className="text-primary text-xl font-bold">2</span>
             <span>Select the player you think will score the most goals</span>
           </li>
-          <li className="flex items-start gap-2">
-            <span className="text-gold">•</span>
+          <li className="flex items-start gap-3">
+            <span className="text-primary text-xl font-bold">3</span>
             <span>AI confidence scores show predicted tournament goals</span>
           </li>
-          <li className="flex items-start gap-2">
-            <span className="text-gold">•</span>
+          <li className="flex items-start gap-3">
+            <span className="text-primary text-xl font-bold">4</span>
             <span>You can update your prediction anytime before the tournament starts</span>
           </li>
         </ul>
@@ -131,22 +160,27 @@ export default function GoldenBootPage() {
 
       {/* Players List */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Top Forwards</h2>
-          <div className="w-64">
-            <input
-              type="text"
-              placeholder="Search players..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white text-sm
-                       focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent
-                       placeholder-gray-500"
-            />
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+          <h2 className="text-2xl font-bold text-on-surface">Top Forwards</h2>
+          <div className="w-full md:w-80">
+            <div className="relative">
+              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search players..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-surface-variant border-none rounded-xl text-on-surface
+                         placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container
+                         transition-all duration-200 text-base"
+              />
+            </div>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPlayers.map((playerStat) => {
             const player = playerStat.player;
             const isSelected = selectedPlayerId === player.id;
@@ -156,72 +190,72 @@ export default function GoldenBootPage() {
               <div
                 key={player.id}
                 onClick={() => setSelectedPlayerId(player.id)}
-                className={`card cursor-pointer transition-all duration-200 ${
+                className={`glass-panel rounded-xl p-6 cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? 'bg-gold/20 border-gold shadow-lg scale-105'
+                    ? 'border-primary-container shadow-2xl shadow-primary-container/20 scale-105 bg-primary-container/10'
                     : isMyPrediction
-                    ? 'bg-gold/10 border-gold/50'
-                    : 'bg-dark-800 border-dark-700 hover:border-gold/30 hover:bg-dark-700'
+                    ? 'border-primary-container/50 bg-primary-container/5'
+                    : 'border-outline-variant hover:border-primary/50 hover:shadow-xl hover:scale-102'
                 }`}
               >
                 {/* Player Header */}
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-white">{player.name}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-sm text-gray-400">{player.team_code}</span>
-                      <span className="text-xs text-gray-500">•</span>
-                      <span className="text-sm text-gray-400">{player.age} years</span>
+                    <h3 className="text-xl font-bold text-on-surface mb-2">{player.name}</h3>
+                    <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+                      <span className="px-2 py-1 bg-surface-variant rounded font-semibold">{player.team_code}</span>
+                      <span>•</span>
+                      <span>{player.age} years</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{player.club}</p>
+                    <p className="text-sm text-on-surface-variant mt-2">{player.club}</p>
                   </div>
                   {isMyPrediction && (
-                    <span className="badge badge-sm bg-gold text-dark-900 font-semibold">
+                    <span className="px-3 py-1 bg-primary-container text-on-primary-fixed text-xs font-bold rounded-lg uppercase tracking-wider">
                       Your Pick
                     </span>
                   )}
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-3 mb-3 pb-3 border-b border-dark-600">
-                  <div>
-                    <p className="text-xs text-gray-500">Goals/90 min</p>
-                    <p className="text-lg font-bold text-white">
+                <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-outline-variant">
+                  <div className="bg-surface-container-high rounded-lg p-3">
+                    <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Goals/90</p>
+                    <p className="text-2xl font-bold text-primary">
                       {player.goals_per_90?.toFixed(2) || 'N/A'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Shots/Game</p>
-                    <p className="text-lg font-bold text-white">
+                  <div className="bg-surface-container-high rounded-lg p-3">
+                    <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Shots/Game</p>
+                    <p className="text-2xl font-bold text-primary">
                       {player.shots_per_game?.toFixed(1) || 'N/A'}
                     </p>
                   </div>
                 </div>
 
                 {/* AI Prediction */}
-                <div className="bg-dark-700 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold text-gray-400">AI Prediction</span>
-                    <span className="text-xs text-gold">
+                <div className="bg-surface-container-low rounded-xl p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">AI Prediction</span>
+                    <span className="text-xs font-semibold text-tertiary px-2 py-1 bg-tertiary-container/20 rounded">
                       {playerStat.prediction_confidence?.toFixed(0)}% confidence
                     </span>
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-gold">
+                    <span className="text-3xl font-bold text-primary">
                       {playerStat.predicted_goals?.toFixed(1)}
                     </span>
-                    <span className="text-sm text-gray-400">goals predicted</span>
+                    <span className="text-sm text-on-surface-variant font-medium">goals predicted</span>
                   </div>
                 </div>
 
                 {/* Selection Indicator */}
                 {isSelected && (
-                  <div className="mt-3 pt-3 border-t border-gold/30">
-                    <div className="flex items-center gap-2 text-gold text-sm font-semibold">
+                  <div className="mt-4 pt-4 border-t border-primary-container/30">
+                    <div className="flex items-center gap-2 text-primary text-sm font-bold">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span>Selected</span>
+                      <span className="uppercase tracking-wider">Selected</span>
                     </div>
                   </div>
                 )}
@@ -232,17 +266,32 @@ export default function GoldenBootPage() {
       </div>
 
       {/* Submit Button */}
-      <div className="sticky bottom-0 bg-dark-900 border-t border-dark-700 p-4 -mx-6 -mb-6">
-        <div className="max-w-md mx-auto">
+      <div className="sticky bottom-0 bg-background/95 backdrop-blur-lg border-t border-outline-variant p-6 -mx-6 -mb-6 shadow-2xl">
+        <div className="max-w-2xl mx-auto">
           <Button
             onClick={handleSubmitPrediction}
             variant="primary"
             size="lg"
-            className="w-full"
+            className="w-full text-base font-bold py-4"
             isLoading={isSubmitting}
             disabled={!selectedPlayerId || isSubmitting}
           >
-            {myPrediction ? 'Update Prediction' : 'Submit Prediction'}
+            {isSubmitting ? (
+              <span className="flex items-center gap-3 justify-center">
+                <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                </svg>
+                Processing...
+              </span>
+            ) : (
+              <span className="flex items-center gap-3 justify-center">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {myPrediction ? 'Update Prediction' : 'Submit Prediction'}
+              </span>
+            )}
           </Button>
         </div>
       </div>
