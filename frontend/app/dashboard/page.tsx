@@ -18,10 +18,24 @@ export default function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const data = await apiClient.getUserStats();
+      setIsLoading(true);
+      // Add timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const statsPromise = apiClient.getUserStats();
+      const data = await Promise.race([statsPromise, timeoutPromise]) as UserStats;
       setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
+      // Set default stats on error so UI still shows
+      setStats({
+        total_predictions: 0,
+        match_predictions: 0,
+        player_predictions: 0,
+        simulations_run: 0
+      });
     } finally {
       setIsLoading(false);
     }

@@ -46,6 +46,10 @@ export const LoginForm = () => {
     try {
       await login(formData.username, formData.password);
       toast.success('Login successful!');
+      
+      // Small delay to ensure cookies are set before navigation
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       router.push('/dashboard');
     } catch (err) {
       toast.error(error || 'Login failed');

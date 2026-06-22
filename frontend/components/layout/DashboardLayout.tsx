@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/auth-store';
 import { Navbar } from './Navbar';
@@ -12,19 +12,42 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const router = useRouter();
-  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+  const { isAuthenticated, isLoading, checkAuth, user } = useAuthStore();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    const verifyAuth = async () => {
+      // Check if we have a token in cookies first
+      const hasToken = document.cookie.includes('access_token=');
+      
+      if (!hasToken) {
+        // No token at all, redirect immediately
+        router.push('/auth/login');
+        return;
+      }
+      
+      // We have a token, verify it with the server
+      try {
+        await checkAuth();
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+    
+    verifyAuth();
+  }, []);
   
+  // Only redirect after we've checked auth AND confirmed user is not authenticated
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isCheckingAuth && !isLoading && !isAuthenticated && !user) {
       router.push('/auth/login');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isCheckingAuth, isAuthenticated, isLoading, user, router]);
   
-  if (isLoading) {
+  // Show loading while checking auth
+  if (isCheckingAuth || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-950">
         <div className="text-center">
@@ -35,8 +58,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
     );
   }
   
-  if (!isAuthenticated) {
-    return null;
+  // Don't render anything if not authenticated (redirect will happen)
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-dark-950">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-gold mx-auto"></div>
+          <p className="mt-4 text-gray-400">Redirecting...</p>
+        </div>
+      </div>
+    );
   }
   
   return (
