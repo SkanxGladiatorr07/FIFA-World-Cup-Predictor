@@ -47,7 +47,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   };
 
   const matchDate = new Date(match.match_date);
-  const isInPast = matchDate < new Date();
+  // Allow predictions for all matches regardless of date
+  // const isInPast = matchDate < new Date();
   const isTBD = match.home_team.name === 'TBD' || match.away_team.name === 'TBD';
 
   return (
@@ -187,7 +188,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
                   size="sm"
                   className="flex-1"
                   isLoading={isSubmitting}
-                  disabled={isSubmitting || isInPast}
+                  disabled={isSubmitting}
                 >
                   {userPrediction ? 'Update' : 'Submit'} Prediction
                 </Button>

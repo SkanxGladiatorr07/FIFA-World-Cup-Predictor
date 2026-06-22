@@ -112,8 +112,8 @@ async def get_matches(
             (Match.home_team_id == team_id) | (Match.away_team_id == team_id)
         )
     
-    # Order by match number and apply pagination
-    matches = query.order_by(Match.match_number).offset(offset).limit(limit).all()
+    # Order by match date (chronological) and apply pagination
+    matches = query.order_by(Match.match_date).offset(offset).limit(limit).all()
     
     # Build response with team details
     result = []
