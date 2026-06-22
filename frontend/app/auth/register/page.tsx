@@ -14,7 +14,7 @@ export default function RegisterPage() {
           <Link href="/" className="inline-block group">
             <div className="flex items-center justify-center gap-2 mb-6">
               <span className="text-5xl group-hover:scale-110 transition-transform">⚽</span>
-              <h1 className="text-3xl font-heading font-bold text-gold">
+              <h1 className="text-3xl font-heading font-bold text-[#f59e0b]">
                 World Cup 2026
               </h1>
             </div>

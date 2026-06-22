@@ -51,40 +51,42 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
   };
 
   return (
-    <div className={`flex items-center justify-center gap-1 ${className}`}>
+    <div className={`flex items-center justify-center gap-2 ${className}`}>
       {/* Decrement Button */}
       <button
         type="button"
         onClick={decrement}
         disabled={disabled || value <= min}
-        className="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#ffc174] disabled:opacity-30 disabled:cursor-not-allowed
-                   flex items-center justify-center text-[#1a1d2e] font-bold transition-colors text-lg"
+        className="w-12 h-12 rounded-full bg-[#6b7280] hover:bg-[#7d8590] disabled:opacity-30 disabled:cursor-not-allowed
+                   flex items-center justify-center text-[#1a1d2e] font-bold transition-colors text-2xl shadow-lg"
       >
         -
       </button>
 
       {/* Score Display */}
-      <input
-        type="number"
-        value={value}
-        onChange={handleChange}
-        min={min}
-        max={max}
-        disabled={disabled}
-        className="w-12 h-9 text-center text-xl font-bold bg-[#1a1d2e] border-2 border-[#f59e0b] rounded-lg
-                   text-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b] focus:border-[#ffc174]
-                   disabled:opacity-50 disabled:cursor-not-allowed [appearance:textfield]
-                   [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        style={{ color: '#ffffff' }}
-      />
+      <div className="w-20 h-14 flex items-center justify-center bg-[#1a1d2e] border-4 border-[#f59e0b] rounded-2xl shadow-xl">
+        <input
+          type="number"
+          value={value}
+          onChange={handleChange}
+          min={min}
+          max={max}
+          disabled={disabled}
+          className="w-full h-full text-center text-3xl font-bold bg-transparent border-none
+                     text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed 
+                     [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none 
+                     [&::-webkit-inner-spin-button]:appearance-none"
+          style={{ color: '#ffffff' }}
+        />
+      </div>
 
       {/* Increment Button */}
       <button
         type="button"
         onClick={increment}
         disabled={disabled || value >= max}
-        className="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#ffc174] disabled:opacity-30 disabled:cursor-not-allowed
-                   flex items-center justify-center text-[#1a1d2e] font-bold transition-colors text-lg"
+        className="w-12 h-12 rounded-full bg-[#f59e0b] hover:bg-[#ffc174] disabled:opacity-30 disabled:cursor-not-allowed
+                   flex items-center justify-center text-[#1a1d2e] font-bold transition-colors text-2xl shadow-lg"
       >
         +
       </button>

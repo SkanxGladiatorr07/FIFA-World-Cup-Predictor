@@ -165,7 +165,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-3xl">⚽</span>
-                <span className="text-xl font-heading font-bold text-gold">World Cup 2026</span>
+                <span className="text-xl font-heading font-bold text-[#f59e0b]">World Cup 2026</span>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
                 AI-powered predictions platform for FIFA World Cup 2026

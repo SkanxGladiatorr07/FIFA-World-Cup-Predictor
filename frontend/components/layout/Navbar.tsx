@@ -30,7 +30,7 @@ export const Navbar = () => {
               </svg>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-primary tracking-tight">
+              <h1 className="text-xl font-bold text-[#f59e0b] tracking-tight">
                 World Cup 2026
               </h1>
               <p className="text-xs text-on-surface-variant font-medium">AI Predictor</p>
@@ -49,7 +49,6 @@ export const Navbar = () => {
                 </div>
                 <div>
                   <span className="text-on-surface font-bold block text-sm">{user.username}</span>
-                  <span className="text-on-surface-variant text-xs">Premium Tier</span>
                 </div>
               </div>
               <Button

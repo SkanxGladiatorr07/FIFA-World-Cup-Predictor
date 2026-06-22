@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuthStore } from '@/lib/auth-store';
 
 const menuItems = [
   {
@@ -38,13 +39,13 @@ const menuItems = [
 
 export const Sidebar = () => {
   const pathname = usePathname();
+  const { user } = useAuthStore();
   
   return (
     <aside className="w-64 bg-surface-container-low border-r border-outline-variant h-screen sticky top-0 overflow-y-auto custom-scrollbar">
       <div className="p-6">
         <div className="mb-8">
-          <h2 className="text-primary font-bold text-lg mb-1">Pro Analyst</h2>
-          <p className="text-on-surface-variant text-sm">Premium Tier</p>
+          <h2 className="text-primary font-bold text-lg mb-1">{user?.username || 'User'}</h2>
         </div>
         
         <nav className="space-y-2">
