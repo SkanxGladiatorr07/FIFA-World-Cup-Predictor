@@ -52,23 +52,23 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const isTBD = match.home_team.name === 'TBD' || match.away_team.name === 'TBD';
 
   return (
-    <div className="bg-[#1e2339] rounded-xl shadow-2xl border-2 border-[#2d3349] hover:border-[#f59e0b] transition-all duration-300 hover:scale-[1.02]">
+    <div className="bg-[#1e2339] rounded-xl shadow-2xl border-2 border-[#f59e0b] hover:border-[#ffc174] transition-all duration-300 hover:scale-[1.02]">
       {/* Match Header */}
-      <div className="flex items-center justify-between mb-5 pb-4 border-b border-[#2d3349] px-6 pt-6">
+      <div className="flex items-center justify-between mb-5 pb-4 border-b-2 border-[#f59e0b] px-6 pt-6">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="px-3 py-1 bg-[#2d3349] text-[#f59e0b] text-xs font-bold rounded-lg uppercase tracking-wider">
+          <span className="px-3 py-1 bg-[#f59e0b] text-[#1a1d2e] text-xs font-bold rounded-lg uppercase tracking-wider">
             {match.match_stage || 'Group'}
           </span>
           {match.group_letter && (
-            <span className="px-3 py-1 bg-[#f59e0b]/20 text-[#f59e0b] text-xs font-bold rounded-lg">
+            <span className="px-3 py-1 bg-[#f59e0b]/20 text-[#f59e0b] text-xs font-bold rounded-lg border border-[#f59e0b]">
               Group {match.group_letter}
             </span>
           )}
-          <span className="text-xs text-gray-400 font-semibold">Match #{match.match_number}</span>
+          <span className="text-xs text-[#f59e0b] font-semibold">Match #{match.match_number}</span>
         </div>
         
         {match.is_completed && (
-          <span className="px-3 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded-lg">
+          <span className="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-lg">
             FINAL
           </span>
         )}
@@ -78,10 +78,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-center mb-5 px-6">
         {/* Home Team */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-2 border-[#2d3349]"
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-4 border-[#f59e0b]"
                style={{ 
                  backgroundColor: match.home_team.primary_color + '20',
-                 borderColor: match.home_team.primary_color + '40'
                }}>
             {match.home_team.code}
           </div>
@@ -93,7 +92,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
         {/* VS Divider */}
         <div className="flex flex-col items-center">
-          <span className="text-gray-400 text-base font-bold">VS</span>
+          <span className="text-[#f59e0b] text-base font-bold">VS</span>
           {!match.is_completed && !isTBD && (
             <span className="text-xs text-gray-500 mt-1 font-semibold">
               {format(matchDate, 'MMM d')}
@@ -103,10 +102,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
         {/* Away Team */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-2 border-[#2d3349]"
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-4 border-[#f59e0b]"
                style={{ 
                  backgroundColor: match.away_team.primary_color + '20',
-                 borderColor: match.away_team.primary_color + '40'
                }}>
             {match.away_team.code}
           </div>
@@ -130,7 +128,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       {/* AI Probabilities - Show for all matches except TBD */}
       {!isTBD && aiProbabilities && (
         <div className="mb-5 px-6">
-          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">AI Prediction</h4>
+          <h4 className="text-xs font-bold text-[#f59e0b] uppercase tracking-wider mb-3">AI Prediction</h4>
           <ProbabilityBar
             probabilities={aiProbabilities}
             homeTeamColor={match.home_team.primary_color}
@@ -143,9 +141,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       {!isTBD && showPredictionForm && (
         <div className="px-6 pb-6">
           {userPrediction && !showForm ? (
-            <div className="bg-[#2d3349] rounded-xl p-4 border border-[#3d4359]">
+            <div className="bg-[#2d3349] rounded-xl p-4 border-2 border-[#f59e0b]">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Your Prediction</span>
+                <span className="text-xs font-bold text-[#f59e0b] uppercase tracking-wider">Your Prediction</span>
                 <button
                   onClick={() => setShowForm(true)}
                   className="text-xs text-[#f59e0b] hover:text-[#ffc174] font-bold transition-colors"
@@ -160,7 +158,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
               </div>
             </div>
           ) : (
-            <div className="bg-[#2d3349] rounded-xl p-5 border border-[#3d4359]">
+            <div className="bg-[#2d3349] rounded-xl p-5 border-2 border-[#f59e0b]">
               <h4 className="text-sm font-bold text-white mb-4">Make Your Prediction</h4>
               
               <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-5">

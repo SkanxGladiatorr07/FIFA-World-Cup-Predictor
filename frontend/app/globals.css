@@ -66,6 +66,35 @@
     background: #ffc174;
   }
   
+  /* Fix input text colors globally */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  textarea,
+  select {
+    color: #ffffff !important;
+  }
+  
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder,
+  input[type="number"]::placeholder,
+  input[type="search"]::placeholder,
+  textarea::placeholder {
+    color: #9ca3af !important;
+  }
+  
+  /* Autofill background fix */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #2f344b inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+  
   /* Card styles */
   .card {
     @apply bg-dark-800 border border-dark-700 rounded-xl p-6 transition-all duration-300;

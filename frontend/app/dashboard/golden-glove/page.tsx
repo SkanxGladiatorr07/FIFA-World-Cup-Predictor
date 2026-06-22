@@ -172,12 +172,33 @@ export default function GoldenGlovePage() {
                 placeholder="Search goalkeepers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-surface-variant border-none rounded-xl text-on-surface
+                className="w-full pl-12 pr-4 py-3 bg-surface-variant border-none rounded-xl text-white
                          placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary-container
                          transition-all duration-200 text-base"
               />
             </div>
           </div>
+        </div>
+
+        {/* Alternative: Dropdown Selection */}
+        <div className="mb-6">
+          <label className="text-sm font-bold text-on-surface uppercase tracking-wider mb-3 block">
+            Or Select Goalkeeper from Dropdown
+          </label>
+          <select
+            value={selectedPlayerId || ''}
+            onChange={(e) => setSelectedPlayerId(e.target.value ? Number(e.target.value) : null)}
+            className="w-full px-4 py-3 bg-surface-variant border-none rounded-xl text-white
+                     focus:outline-none focus:ring-2 focus:ring-secondary-container cursor-pointer
+                     transition-all duration-200 text-base font-medium"
+          >
+            <option value="">-- Select a Goalkeeper --</option>
+            {filteredPlayers.map((playerStat) => (
+              <option key={playerStat.player.id} value={playerStat.player.id}>
+                {playerStat.player.name} ({playerStat.player.team_code}) - {playerStat.predicted_saves?.toFixed(0)} predicted saves
+              </option>
+            ))}
+          </select>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -126,28 +126,40 @@ export default function MatchSimulatorPage() {
                     setSelectedMatch(match);
                     setSimulationResult(null);
                   }}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 ${
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
                     selectedMatch?.id === match.id
-                      ? 'bg-primary-container/20 border-primary-container shadow-lg scale-105'
-                      : 'bg-surface-container-low border-outline-variant hover:border-primary/50 hover:shadow-md'
+                      ? 'bg-[#f59e0b] border-[#f59e0b] shadow-2xl scale-105 text-[#1a1d2e]'
+                      : 'bg-[#1e2339] border-[#2d3349] hover:border-[#f59e0b] hover:shadow-lg text-white'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                    <span className={`text-xs font-semibold uppercase tracking-wider ${
+                      selectedMatch?.id === match.id ? 'text-[#1a1d2e]' : 'text-gray-400'
+                    }`}>
                       Match #{match.match_number}
                     </span>
                     {match.group_letter && (
-                      <span className="text-xs px-2 py-1 bg-surface-variant text-on-surface-variant rounded font-bold">
+                      <span className={`text-xs px-2 py-1 rounded font-bold ${
+                        selectedMatch?.id === match.id 
+                          ? 'bg-[#1a1d2e] text-[#f59e0b]' 
+                          : 'bg-[#2d3349] text-gray-400'
+                      }`}>
                         Group {match.group_letter}
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-sm mb-2">
-                    <span className="font-bold text-on-surface">{match.home_team.code}</span>
-                    <span className="text-on-surface-variant">vs</span>
-                    <span className="font-bold text-on-surface">{match.away_team.code}</span>
+                    <span className={`font-bold ${
+                      selectedMatch?.id === match.id ? 'text-[#1a1d2e]' : 'text-white'
+                    }`}>{match.home_team.code}</span>
+                    <span className={selectedMatch?.id === match.id ? 'text-[#1a1d2e]' : 'text-gray-400'}>vs</span>
+                    <span className={`font-bold ${
+                      selectedMatch?.id === match.id ? 'text-[#1a1d2e]' : 'text-white'
+                    }`}>{match.away_team.code}</span>
                   </div>
-                  <p className="text-xs text-on-surface-variant font-medium">
+                  <p className={`text-xs font-medium ${
+                    selectedMatch?.id === match.id ? 'text-[#1a1d2e]/70' : 'text-gray-500'
+                  }`}>
                     {format(new Date(match.match_date), 'MMM d, yyyy')}
                   </p>
                 </div>
