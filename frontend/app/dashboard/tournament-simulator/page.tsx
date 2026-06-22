@@ -89,27 +89,44 @@ export default function TournamentSimulatorPage() {
             {Object.entries(winnerProbs)
               .sort(([, a]: any, [, b]: any) => b - a)
               .slice(0, 10)
-              .map(([team, prob]: any, index) => (
-                <div key={team} className="bg-surface-container-low rounded-xl p-4 border-2 border-primary/20 hover:border-primary transition-all">
-                  <div className="flex items-center gap-4 mb-2">
-                    <span className="w-8 h-8 flex items-center justify-center bg-primary text-on-primary-fixed text-sm font-bold rounded-lg shadow-md">
-                      #{index + 1}
-                    </span>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-base font-bold text-on-surface">{team}</span>
-                        <span className="text-lg font-bold text-primary">{prob.toFixed(1)}%</span>
+              .map(([team, prob]: any, index) => {
+                // Color gradient for each position
+                const colors = [
+                  { bg: 'bg-[#f59e0b]', border: 'border-[#f59e0b]', gradient: 'from-[#f59e0b] to-[#ffc174]' }, // Gold
+                  { bg: 'bg-[#c0c0c0]', border: 'border-[#c0c0c0]', gradient: 'from-[#c0c0c0] to-[#e8e8e8]' }, // Silver
+                  { bg: 'bg-[#cd7f32]', border: 'border-[#cd7f32]', gradient: 'from-[#cd7f32] to-[#e39b5f]' }, // Bronze
+                  { bg: 'bg-[#60a5fa]', border: 'border-[#60a5fa]', gradient: 'from-[#60a5fa] to-[#93c5fd]' }, // Blue
+                  { bg: 'bg-[#34d399]', border: 'border-[#34d399]', gradient: 'from-[#34d399] to-[#6ee7b7]' }, // Green
+                  { bg: 'bg-[#a78bfa]', border: 'border-[#a78bfa]', gradient: 'from-[#a78bfa] to-[#c4b5fd]' }, // Purple
+                  { bg: 'bg-[#f472b6]', border: 'border-[#f472b6]', gradient: 'from-[#f472b6] to-[#f9a8d4]' }, // Pink
+                  { bg: 'bg-[#fb923c]', border: 'border-[#fb923c]', gradient: 'from-[#fb923c] to-[#fdba74]' }, // Orange
+                  { bg: 'bg-[#22d3ee]', border: 'border-[#22d3ee]', gradient: 'from-[#22d3ee] to-[#67e8f9]' }, // Cyan
+                  { bg: 'bg-[#fbbf24]', border: 'border-[#fbbf24]', gradient: 'from-[#fbbf24] to-[#fcd34d]' }, // Yellow
+                ];
+                const color = colors[index] || colors[0];
+                
+                return (
+                  <div key={team} className={`bg-surface-container-low rounded-xl p-4 border-2 ${color.border} hover:border-opacity-100 transition-all`}>
+                    <div className="flex items-center gap-4 mb-2">
+                      <span className={`w-8 h-8 flex items-center justify-center ${color.bg} text-[#1a1d2e] text-sm font-bold rounded-lg shadow-md`}>
+                        #{index + 1}
+                      </span>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-base font-bold text-on-surface">{team}</span>
+                          <span className={`text-lg font-bold text-white`}>{prob.toFixed(1)}%</span>
+                        </div>
                       </div>
                     </div>
+                    <div className="h-3 bg-surface-variant rounded-full overflow-hidden border border-outline-variant">
+                      <div
+                        className={`h-full bg-gradient-to-r ${color.gradient} transition-all duration-500 rounded-full shadow-lg`}
+                        style={{ width: `${prob}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="h-3 bg-surface-variant rounded-full overflow-hidden border border-primary/20">
-                    <div
-                      className="h-full bg-gradient-to-r from-primary to-primary-fixed-dim transition-all duration-500 rounded-full"
-                      style={{ width: `${prob}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
 

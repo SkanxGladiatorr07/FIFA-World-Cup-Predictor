@@ -52,7 +52,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const isTBD = match.home_team.name === 'TBD' || match.away_team.name === 'TBD';
 
   return (
-    <div className="bg-[#1e2339] rounded-xl shadow-2xl border-2 border-[#f59e0b] hover:border-[#ffc174] transition-all duration-300 hover:scale-[1.02]">
+    <div className="bg-[#1e2339] rounded-xl shadow-2xl border-2 border-[#f59e0b] hover:border-[#ffc174] transition-all duration-300">
       {/* Match Header */}
       <div className="flex items-center justify-between mb-5 pb-4 border-b-2 border-[#f59e0b] px-6 pt-6">
         <div className="flex items-center gap-2 flex-wrap">

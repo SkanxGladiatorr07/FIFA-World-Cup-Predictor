@@ -28,7 +28,7 @@ export default function RegisterPage() {
         </div>
         
         {/* Register Card */}
-        <div className="bg-dark-800 rounded-xl border border-dark-700 p-8 shadow-2xl hover:border-gold/50 transition-all duration-300">
+        <div className="bg-dark-800/50 backdrop-blur-sm rounded-xl border border-dark-700 p-8 shadow-2xl">
           <RegisterForm />
         </div>
         
