@@ -52,7 +52,8 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
           className="w-full h-full text-center text-4xl font-bold bg-transparent border-none
                      focus:outline-none focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed 
                      [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none 
-                     [&::-webkit-inner-spin-button]:appearance-none"
+                     [&::-webkit-inner-spin-button]:appearance-none
+                     !text-[#f59e0b]"
           style={{ color: '#f59e0b' }}
         />
       </div>
