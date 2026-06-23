@@ -53,21 +53,20 @@ def simulate_match_outcome(home_team: Team, away_team: Team, randomness: float =
 
 def simulate_tournament(db: Session, num_simulations: int, randomness: float) -> Dict[str, Any]:
     """
-    Simulate the entire World Cup tournament
-    TODO: Replace with more sophisticated ML model
+    Simulate the entire World Cup tournament with winner, runner-up, and third place tracking
     """
     # Get all teams
     teams = db.query(Team).all()
     team_dict = {team.id: team for team in teams}
     
     winner_counter = Counter()
+    runner_up_counter = Counter()
+    third_place_counter = Counter()
     finalist_counter = Counter()
     semifinalist_counter = Counter()
     
     for _ in range(num_simulations):
         # Simulate from group stage (simplified - just use rankings)
-        # In reality, would simulate all group matches
-        
         # Top teams more likely to progress
         qualified_teams = sorted(teams, key=lambda t: t.fifa_ranking or 100)[:16]
         
@@ -84,7 +83,6 @@ def simulate_tournament(db: Session, num_simulations: int, randomness: float) ->
                 elif result["away"] > result["home"]:
                     round_of_16_winners.append(away)
                 else:
-                    # Penalty shootout (50-50)
                     round_of_16_winners.append(random.choice([home, away]))
         
         # Quarter-finals
@@ -102,8 +100,9 @@ def simulate_tournament(db: Session, num_simulations: int, randomness: float) ->
                 else:
                     quarter_final_winners.append(random.choice([home, away]))
         
-        # Semi-finals
+        # Semi-finals - Track losers for third place match
         semi_final_winners = []
+        semi_final_losers = []
         for i in range(0, len(quarter_final_winners), 2):
             if i + 1 < len(quarter_final_winners):
                 home = quarter_final_winners[i]
@@ -115,10 +114,29 @@ def simulate_tournament(db: Session, num_simulations: int, randomness: float) ->
                 
                 if result["home"] > result["away"]:
                     semi_final_winners.append(home)
+                    semi_final_losers.append(away)
                 elif result["away"] > result["home"]:
                     semi_final_winners.append(away)
+                    semi_final_losers.append(home)
                 else:
-                    semi_final_winners.append(random.choice([home, away]))
+                    winner = random.choice([home, away])
+                    loser = away if winner == home else home
+                    semi_final_winners.append(winner)
+                    semi_final_losers.append(loser)
+        
+        # Third Place Match
+        if len(semi_final_losers) >= 2:
+            home = semi_final_losers[0]
+            away = semi_final_losers[1]
+            result = simulate_match_outcome(home, away, randomness)
+            
+            if result["home"] > result["away"]:
+                third_place_counter[home.name] += 1
+            elif result["away"] > result["home"]:
+                third_place_counter[away.name] += 1
+            else:
+                third_place_winner = random.choice([home, away])
+                third_place_counter[third_place_winner.name] += 1
         
         # Final
         if len(semi_final_winners) >= 2:
@@ -131,16 +149,30 @@ def simulate_tournament(db: Session, num_simulations: int, randomness: float) ->
             
             if result["home"] > result["away"]:
                 winner_counter[home.name] += 1
+                runner_up_counter[away.name] += 1
             elif result["away"] > result["home"]:
                 winner_counter[away.name] += 1
+                runner_up_counter[home.name] += 1
             else:
                 winner = random.choice([home, away])
+                loser = away if winner == home else home
                 winner_counter[winner.name] += 1
+                runner_up_counter[loser.name] += 1
     
     # Calculate probabilities
     winner_probabilities = {
         team: (count / num_simulations) * 100 
         for team, count in winner_counter.most_common(10)
+    }
+    
+    runner_up_probabilities = {
+        team: (count / num_simulations) * 100 
+        for team, count in runner_up_counter.most_common(10)
+    }
+    
+    third_place_probabilities = {
+        team: (count / num_simulations) * 100 
+        for team, count in third_place_counter.most_common(10)
     }
     
     finalist_probabilities = {
@@ -154,11 +186,17 @@ def simulate_tournament(db: Session, num_simulations: int, randomness: float) ->
     }
     
     most_likely_winner = winner_counter.most_common(1)[0][0] if winner_counter else None
+    most_likely_runner_up = runner_up_counter.most_common(1)[0][0] if runner_up_counter else None
+    most_likely_third_place = third_place_counter.most_common(1)[0][0] if third_place_counter else None
     
     return {
         "simulations_run": num_simulations,
         "most_likely_winner": most_likely_winner,
+        "most_likely_runner_up": most_likely_runner_up,
+        "most_likely_third_place": most_likely_third_place,
         "winner_probabilities": winner_probabilities,
+        "runner_up_probabilities": runner_up_probabilities,
+        "third_place_probabilities": third_place_probabilities,
         "finalist_probabilities": finalist_probabilities,
         "semifinalist_probabilities": semifinalist_probabilities,
         "randomness_factor": randomness

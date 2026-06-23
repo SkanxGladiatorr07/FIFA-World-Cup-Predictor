@@ -163,26 +163,28 @@ def predict_match(home_team_name: str, away_team_name: str) -> Dict:
         # Get predicted class
         pred_class = _model.predict(X)[0]
         
-        # Generate predicted scoreline using Monte Carlo
-        predicted_home_score = 0
-        predicted_away_score = 0
+        # Generate predicted scoreline using Monte Carlo with frequency tracking
+        score_counter = Counter()
         
         for _ in range(10000):
             home_score = np.random.poisson(home_xg)
             away_score = np.random.poisson(away_xg)
             
             if pred_class == 2 and home_score > away_score:
-                predicted_home_score = home_score
-                predicted_away_score = away_score
-                break
+                score_counter[f"{home_score}-{away_score}"] += 1
             elif pred_class == 0 and away_score > home_score:
-                predicted_home_score = home_score
-                predicted_away_score = away_score
-                break
+                score_counter[f"{home_score}-{away_score}"] += 1
             elif pred_class == 1 and home_score == away_score:
-                predicted_home_score = home_score
-                predicted_away_score = away_score
-                break
+                score_counter[f"{home_score}-{away_score}"] += 1
+        
+        # Get most common (most likely) score
+        if score_counter:
+            most_likely_score_str = score_counter.most_common(1)[0][0]
+            predicted_home_score, predicted_away_score = map(int, most_likely_score_str.split('-'))
+        else:
+            # Fallback if no valid scores found
+            predicted_home_score = int(round(home_xg))
+            predicted_away_score = int(round(away_xg))
         
         return {
             "home_win_prob": round(home_win_prob, 1),

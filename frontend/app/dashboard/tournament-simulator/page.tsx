@@ -61,27 +61,60 @@ export default function TournamentSimulatorPage() {
 
     const results = sim.results_json;
     const winnerProbs = results.winner_probabilities || {};
+    const runnerUpProbs = results.runner_up_probabilities || {};
+    const thirdPlaceProbs = results.third_place_probabilities || {};
     const finalistProbs = results.finalist_probabilities || {};
 
     return (
-      <div className="space-y-6">
-        {/* Most Likely Winner */}
-        <div className="bg-gradient-to-br from-primary-container/30 to-primary-container/10 border-2 border-primary-container rounded-xl p-6 shadow-lg">
-          <h4 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3">Most Likely Winner</h4>
-          <div className="flex items-center gap-4">
-            <div className="text-6xl">🏆</div>
-            <div>
-              <p className="text-4xl font-bold text-primary mb-1">{results.most_likely_winner || 'N/A'}</p>
-              <p className="text-base text-on-surface-variant font-semibold">
-                {winnerProbs[results.most_likely_winner]?.toFixed(1)}% probability of winning
-              </p>
+      <div className="space-y-8">
+        {/* Podium - Winner, Runner-up, Third Place */}
+        <div className="bg-gradient-to-br from-primary-container/20 to-secondary-container/20 border-2 border-primary/30 rounded-2xl p-8 shadow-2xl">
+          <h4 className="text-2xl font-bold text-primary mb-6 text-center flex items-center justify-center gap-3">
+            <span>🏆</span>
+            Tournament Podium
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Winner - 1st Place */}
+            <div className="bg-gradient-to-br from-[#f59e0b]/30 to-[#ffc174]/10 border-4 border-[#f59e0b] rounded-2xl p-6 shadow-2xl transform md:scale-110 md:mt-0">
+              <div className="text-center">
+                <div className="text-7xl mb-4">🥇</div>
+                <h5 className="text-sm font-bold text-[#f59e0b] uppercase tracking-wider mb-2">Champion</h5>
+                <p className="text-3xl font-bold text-white mb-2">{results.most_likely_winner || 'N/A'}</p>
+                <p className="text-lg text-[#f59e0b] font-semibold">
+                  {winnerProbs[results.most_likely_winner]?.toFixed(1)}%
+                </p>
+              </div>
+            </div>
+
+            {/* Runner-up - 2nd Place */}
+            <div className="bg-gradient-to-br from-[#c0c0c0]/30 to-[#e8e8e8]/10 border-4 border-[#c0c0c0] rounded-2xl p-6 shadow-xl">
+              <div className="text-center">
+                <div className="text-6xl mb-4">🥈</div>
+                <h5 className="text-sm font-bold text-[#c0c0c0] uppercase tracking-wider mb-2">Runner-up</h5>
+                <p className="text-2xl font-bold text-white mb-2">{results.most_likely_runner_up || 'N/A'}</p>
+                <p className="text-base text-[#c0c0c0] font-semibold">
+                  {runnerUpProbs[results.most_likely_runner_up]?.toFixed(1)}%
+                </p>
+              </div>
+            </div>
+
+            {/* Third Place */}
+            <div className="bg-gradient-to-br from-[#cd7f32]/30 to-[#e39b5f]/10 border-4 border-[#cd7f32] rounded-2xl p-6 shadow-xl">
+              <div className="text-center">
+                <div className="text-6xl mb-4">🥉</div>
+                <h5 className="text-sm font-bold text-[#cd7f32] uppercase tracking-wider mb-2">Third Place</h5>
+                <p className="text-2xl font-bold text-white mb-2">{results.most_likely_third_place || 'N/A'}</p>
+                <p className="text-base text-[#cd7f32] font-semibold">
+                  {thirdPlaceProbs[results.most_likely_third_place]?.toFixed(1)}%
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Winner Probabilities */}
-        <div>
-          <h4 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+        <div className="glass-panel rounded-2xl p-6 border-2 border-primary/20">
+          <h4 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
             <span>🏆</span>
             Winner Probabilities (Top 10)
           </h4>
@@ -132,8 +165,8 @@ export default function TournamentSimulatorPage() {
 
         {/* Finalist Probabilities */}
         {Object.keys(finalistProbs).length > 0 && (
-          <div>
-            <h4 className="text-lg font-bold text-secondary mb-4 flex items-center gap-2">
+          <div className="glass-panel rounded-2xl p-6 border-2 border-secondary/20">
+            <h4 className="text-2xl font-bold text-secondary mb-6 flex items-center gap-2">
               <span>🥈</span>
               Finalist Probabilities (Top 6)
             </h4>
@@ -146,6 +179,50 @@ export default function TournamentSimulatorPage() {
                     <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">Finalist</p>
                     <p className="text-xl font-bold text-on-surface mb-1">{team}</p>
                     <p className="text-2xl font-bold text-secondary">{prob.toFixed(1)}%</p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* Runner-up Probabilities */}
+        {Object.keys(runnerUpProbs).length > 0 && (
+          <div className="glass-panel rounded-2xl p-6 border-2 border-[#c0c0c0]/20">
+            <h4 className="text-2xl font-bold text-[#c0c0c0] mb-6 flex items-center gap-2">
+              <span>🥈</span>
+              Runner-up Probabilities (Top 6)
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(runnerUpProbs)
+                .sort(([, a]: any, [, b]: any) => b - a)
+                .slice(0, 6)
+                .map(([team, prob]: any) => (
+                  <div key={team} className="bg-surface-container-low rounded-xl p-5 border-2 border-[#c0c0c0]/30 hover:border-[#c0c0c0] transition-all">
+                    <p className="text-sm font-semibold text-[#c0c0c0] uppercase tracking-wider mb-2">Runner-up</p>
+                    <p className="text-xl font-bold text-on-surface mb-1">{team}</p>
+                    <p className="text-2xl font-bold text-[#c0c0c0]">{prob.toFixed(1)}%</p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* Third Place Probabilities */}
+        {Object.keys(thirdPlaceProbs).length > 0 && (
+          <div className="glass-panel rounded-2xl p-6 border-2 border-[#cd7f32]/20">
+            <h4 className="text-2xl font-bold text-[#cd7f32] mb-6 flex items-center gap-2">
+              <span>🥉</span>
+              Third Place Probabilities (Top 6)
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(thirdPlaceProbs)
+                .sort(([, a]: any, [, b]: any) => b - a)
+                .slice(0, 6)
+                .map(([team, prob]: any) => (
+                  <div key={team} className="bg-surface-container-low rounded-xl p-5 border-2 border-[#cd7f32]/30 hover:border-[#cd7f32] transition-all">
+                    <p className="text-sm font-semibold text-[#cd7f32] uppercase tracking-wider mb-2">Third Place</p>
+                    <p className="text-xl font-bold text-on-surface mb-1">{team}</p>
+                    <p className="text-2xl font-bold text-[#cd7f32]">{prob.toFixed(1)}%</p>
                   </div>
                 ))}
             </div>
