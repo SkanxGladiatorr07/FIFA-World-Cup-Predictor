@@ -16,74 +16,30 @@ from app.schemas.match import (
     TeamBase
 )
 from app.api.dependencies import get_current_user
+from app.ml_service import predict_match
 import random
 
 
 router = APIRouter(prefix="/matches", tags=["Matches"])
 
 
-def calculate_mock_probabilities(home_team_id: Optional[int], away_team_id: Optional[int], db: Session) -> PredictionProbabilities:
+def calculate_match_probabilities(home_team_name: str, away_team_name: str) -> PredictionProbabilities:
     """
-    Calculate mock prediction probabilities
-    TODO: Replace with actual ML model predictions
+    Calculate match prediction probabilities using ML model
     """
-    if not home_team_id or not away_team_id:
-        # TBD matches - equal probabilities
-        return PredictionProbabilities(home_win=33.3, draw=33.3, away_win=33.4)
-    
-    # Get team rankings
-    home_team = db.query(Team).filter(Team.id == home_team_id).first()
-    away_team = db.query(Team).filter(Team.id == away_team_id).first()
-    
-    if not home_team or not away_team:
-        return PredictionProbabilities(home_win=40.0, draw=30.0, away_win=30.0)
-    
-    # Simple probability based on FIFA ranking (lower ranking = stronger team)
-    home_strength = 100 - (home_team.fifa_ranking if home_team.fifa_ranking else 50)
-    away_strength = 100 - (away_team.fifa_ranking if away_team.fifa_ranking else 50)
-    
-    # Add home advantage
-    home_strength += 5
-    
-    total_strength = home_strength + away_strength
-    
-    if total_strength == 0:
-        return PredictionProbabilities(home_win=40.0, draw=30.0, away_win=30.0)
-    
-    # Calculate base probabilities
-    home_prob = (home_strength / total_strength) * 70  # 70% allocated to win probabilities
-    away_prob = (away_strength / total_strength) * 70
-    draw_prob = 100 - home_prob - away_prob
-    
-    # Ensure draw probability is reasonable (15-35%)
-    if draw_prob < 15:
-        adjustment = 15 - draw_prob
-        home_prob -= adjustment / 2
-        away_prob -= adjustment / 2
-        draw_prob = 15
-    elif draw_prob > 35:
-        adjustment = draw_prob - 35
-        home_prob += adjustment / 2
-        away_prob += adjustment / 2
-        draw_prob = 35
-    
-    # Add small random variation for realism
-    variation = random.uniform(-3, 3)
-    home_prob += variation
-    away_prob -= variation
-    
-    # Ensure probabilities sum to 100 and are within bounds
-    total = home_prob + draw_prob + away_prob
-    home_prob = max(5, min(80, (home_prob / total) * 100))
-    draw_prob = max(10, min(40, (draw_prob / total) * 100))
-    away_prob = 100 - home_prob - draw_prob
-    
-    # Round to 1 decimal place
-    return PredictionProbabilities(
-        home_win=round(home_prob, 1),
-        draw=round(draw_prob, 1),
-        away_win=round(away_prob, 1)
-    )
+    try:
+        # Use ML model for prediction
+        prediction = predict_match(home_team_name, away_team_name)
+        
+        return PredictionProbabilities(
+            home_win=prediction["home_win_prob"],
+            draw=prediction["draw_prob"],
+            away_win=prediction["away_win_prob"]
+        )
+    except Exception as e:
+        print(f"Error in ML prediction: {e}")
+        # Fallback to equal probabilities
+        return PredictionProbabilities(home_win=33.3, draw=33.4, away_win=33.3)
 
 
 @router.get("/", response_model=List[MatchWithTeams])
@@ -208,8 +164,12 @@ async def get_match(
         if prediction:
             user_prediction = MatchPredictionResponse.from_orm(prediction)
     
-    # Calculate AI probabilities
-    ai_probabilities = calculate_mock_probabilities(match.home_team_id, match.away_team_id, db)
+    # Calculate AI probabilities using ML model
+    if home_team and away_team and home_team.name != "TBD" and away_team.name != "TBD":
+        ai_probabilities = calculate_match_probabilities(home_team.name, away_team.name)
+    else:
+        # TBD matches get equal probabilities
+        ai_probabilities = PredictionProbabilities(home_win=33.3, draw=33.4, away_win=33.3)
     
     match_dict = {
         "id": match.id,

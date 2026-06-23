@@ -14,6 +14,7 @@ from app.schemas.simulation import (
     MatchSimulationResult
 )
 from app.api.dependencies import get_current_user
+from app.ml_service import simulate_single_match, predict_match
 import random
 from collections import Counter
 
@@ -23,33 +24,31 @@ router = APIRouter(prefix="/simulations", tags=["Simulations"])
 
 def simulate_match_outcome(home_team: Team, away_team: Team, randomness: float = 0.15) -> Dict[str, int]:
     """
-    Simulate a single match outcome
-    TODO: Replace with ML model predictions
+    Simulate a single match outcome using ML model
     """
-    # Calculate team strengths
-    home_strength = 100 - (home_team.fifa_ranking if home_team.fifa_ranking else 50)
-    away_strength = 100 - (away_team.fifa_ranking if away_team.fifa_ranking else 50)
-    
-    # Add home advantage
-    home_strength += 5
-    
-    # Add randomness
-    home_strength *= (1 + random.uniform(-randomness, randomness))
-    away_strength *= (1 + random.uniform(-randomness, randomness))
-    
-    # Calculate goal probabilities (Poisson-like distribution)
-    home_expected_goals = (home_strength / (home_strength + away_strength)) * 3.0
-    away_expected_goals = (away_strength / (home_strength + away_strength)) * 3.0
-    
-    # Generate scores
-    home_score = max(0, int(random.gauss(home_expected_goals, 1.2)))
-    away_score = max(0, int(random.gauss(away_expected_goals, 1.2)))
-    
-    # Cap at reasonable values
-    home_score = min(home_score, 7)
-    away_score = min(away_score, 7)
-    
-    return {"home": home_score, "away": away_score}
+    try:
+        winner, home_score, away_score = simulate_single_match(home_team.name, away_team.name, randomness)
+        return {"home": home_score, "away": away_score}
+    except Exception as e:
+        print(f"Error in simulate_match_outcome: {e}")
+        # Fallback to simple simulation
+        home_strength = 100 - (home_team.fifa_ranking if home_team.fifa_ranking else 50)
+        away_strength = 100 - (away_team.fifa_ranking if away_team.fifa_ranking else 50)
+        
+        home_strength += 5
+        home_strength *= (1 + random.uniform(-randomness, randomness))
+        away_strength *= (1 + random.uniform(-randomness, randomness))
+        
+        home_expected_goals = (home_strength / (home_strength + away_strength)) * 3.0
+        away_expected_goals = (away_strength / (home_strength + away_strength)) * 3.0
+        
+        home_score = max(0, int(random.gauss(home_expected_goals, 1.2)))
+        away_score = max(0, int(random.gauss(away_expected_goals, 1.2)))
+        
+        home_score = min(home_score, 7)
+        away_score = min(away_score, 7)
+        
+        return {"home": home_score, "away": away_score}
 
 
 def simulate_tournament(db: Session, num_simulations: int, randomness: float) -> Dict[str, Any]:
@@ -211,7 +210,7 @@ async def simulate_match_endpoint(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Simulate a single match multiple times to get probabilities
+    Simulate a single match multiple times to get probabilities using ML model
     """
     # Get match
     match = db.query(Match).filter(Match.id == simulation_data.match_id).first()
@@ -237,47 +236,99 @@ async def simulate_match_endpoint(
             detail="Teams not found"
         )
     
-    # Run simulations
-    home_wins = 0
-    draws = 0
-    away_wins = 0
-    score_counter = Counter()
-    
-    for _ in range(simulation_data.num_simulations):
-        result = simulate_match_outcome(home_team, away_team, 0.15)
-        score_key = f"{result['home']}-{result['away']}"
-        score_counter[score_key] += 1
+    try:
+        # Use ML model for initial prediction
+        ml_prediction = predict_match(home_team.name, away_team.name)
         
-        if result["home"] > result["away"]:
-            home_wins += 1
-        elif result["away"] > result["home"]:
-            away_wins += 1
-        else:
-            draws += 1
-    
-    # Calculate probabilities
-    home_win_prob = (home_wins / simulation_data.num_simulations) * 100
-    draw_prob = (draws / simulation_data.num_simulations) * 100
-    away_win_prob = (away_wins / simulation_data.num_simulations) * 100
-    
-    # Get most likely score
-    most_likely = score_counter.most_common(1)[0][0].split('-')
-    most_likely_score = {"home": int(most_likely[0]), "away": int(most_likely[1])}
-    
-    # Get score probabilities (top 10)
-    score_probabilities = {
-        score: (count / simulation_data.num_simulations) * 100
-        for score, count in score_counter.most_common(10)
-    }
-    
-    return MatchSimulationResult(
-        match_id=match.id,
-        home_win_probability=round(home_win_prob, 1),
-        draw_probability=round(draw_prob, 1),
-        away_win_probability=round(away_win_prob, 1),
-        most_likely_score=most_likely_score,
-        score_probabilities={k: round(v, 1) for k, v in score_probabilities.items()}
-    )
+        # Run Monte Carlo simulations for score distribution
+        home_wins = 0
+        draws = 0
+        away_wins = 0
+        score_counter = Counter()
+        
+        for _ in range(simulation_data.num_simulations):
+            result = simulate_match_outcome(home_team, away_team, 0.15)
+            score_key = f"{result['home']}-{result['away']}"
+            score_counter[score_key] += 1
+            
+            if result["home"] > result["away"]:
+                home_wins += 1
+            elif result["away"] > result["home"]:
+                away_wins += 1
+            else:
+                draws += 1
+        
+        # Calculate probabilities from simulations
+        home_win_prob = (home_wins / simulation_data.num_simulations) * 100
+        draw_prob = (draws / simulation_data.num_simulations) * 100
+        away_win_prob = (away_wins / simulation_data.num_simulations) * 100
+        
+        # Blend with ML predictions (70% ML, 30% simulation)
+        home_win_prob = 0.7 * ml_prediction["home_win_prob"] + 0.3 * home_win_prob
+        draw_prob = 0.7 * ml_prediction["draw_prob"] + 0.3 * draw_prob
+        away_win_prob = 0.7 * ml_prediction["away_win_prob"] + 0.3 * away_win_prob
+        
+        # Get most likely score from ML prediction
+        most_likely_score = {
+            "home": ml_prediction["predicted_home_score"],
+            "away": ml_prediction["predicted_away_score"]
+        }
+        
+        # Get score probabilities (top 10)
+        score_probabilities = {
+            score: (count / simulation_data.num_simulations) * 100
+            for score, count in score_counter.most_common(10)
+        }
+        
+        return MatchSimulationResult(
+            match_id=match.id,
+            home_win_probability=round(home_win_prob, 1),
+            draw_probability=round(draw_prob, 1),
+            away_win_probability=round(away_win_prob, 1),
+            most_likely_score=most_likely_score,
+            score_probabilities={k: round(v, 1) for k, v in score_probabilities.items()}
+        )
+        
+    except Exception as e:
+        print(f"Error in match simulation: {e}")
+        # Fallback to simple simulation
+        home_wins = 0
+        draws = 0
+        away_wins = 0
+        score_counter = Counter()
+        
+        for _ in range(simulation_data.num_simulations):
+            result = simulate_match_outcome(home_team, away_team, 0.15)
+            score_key = f"{result['home']}-{result['away']}"
+            score_counter[score_key] += 1
+            
+            if result["home"] > result["away"]:
+                home_wins += 1
+            elif result["away"] > result["home"]:
+                away_wins += 1
+            else:
+                draws += 1
+        
+        home_win_prob = (home_wins / simulation_data.num_simulations) * 100
+        draw_prob = (draws / simulation_data.num_simulations) * 100
+        away_win_prob = (away_wins / simulation_data.num_simulations) * 100
+        
+        most_likely = score_counter.most_common(1)[0][0].split('-')
+        most_likely_score = {"home": int(most_likely[0]), "away": int(most_likely[1])}
+        
+        score_probabilities = {
+            score: (count / simulation_data.num_simulations) * 100
+            for score, count in score_counter.most_common(10)
+        }
+        
+        return MatchSimulationResult(
+            match_id=match.id,
+            home_win_probability=round(home_win_prob, 1),
+            draw_probability=round(draw_prob, 1),
+            away_win_probability=round(away_win_prob, 1),
+            most_likely_score=most_likely_score,
+            score_probabilities={k: round(v, 1) for k, v in score_probabilities.items()}
+        )
 
 
 @router.get("/my-simulations", response_model=List[SimulationResponse])
