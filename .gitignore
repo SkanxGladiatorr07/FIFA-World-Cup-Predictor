@@ -1,0 +1,8 @@
+# Exclude dataset
+matches.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.env
