@@ -64,8 +64,9 @@ logs/
 htmlcov/
 .pytest_cache/
 
-# ML Models
+# ML Models - Exclude large files but keep trained models
 *.pkl
-*.joblib
 *.h5
-*.model
+
+# Exclude dataset CSVs
+matches.csv
