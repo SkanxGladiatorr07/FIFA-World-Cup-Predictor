@@ -1,6 +1,7 @@
 """
 ML Model Service for FIFA World Cup Predictions
 This module provides functions to load and use the trained ML models for match predictions
+Enhanced with FIFA Rankings integration for better accuracy
 """
 
 import joblib
@@ -10,10 +11,32 @@ import os
 from typing import Dict, Tuple, Optional
 from pathlib import Path
 from collections import Counter
+import sys
 
-# Get the base directory
+# Add datasets to path for FIFA rankings import
 BASE_DIR = Path(__file__).resolve().parent.parent
 ML_MODELS_DIR = BASE_DIR / "ml_models"
+DATASETS_DIR = BASE_DIR / "datasets"
+sys.path.append(str(DATASETS_DIR))
+
+# Import FIFA rankings data
+try:
+    from fifa_rankings_2026 import (
+        get_fifa_rank, get_fifa_points, get_fifa_trend, 
+        get_elo_rating, get_confederation_strength, calculate_form_score
+    )
+    FIFA_RANKINGS_AVAILABLE = True
+    print("✅ FIFA Rankings data loaded successfully!")
+except ImportError:
+    print("⚠️ FIFA Rankings data not available, using historical data only")
+    FIFA_RANKINGS_AVAILABLE = False
+    # Fallback functions
+    def get_fifa_rank(team_name): return 50
+    def get_fifa_points(team_name): return 1500.0
+    def get_fifa_trend(team_name): return 0
+    def get_elo_rating(team_name): return 1800
+    def get_confederation_strength(team_name): return 1.0
+    def calculate_form_score(team_name): return 50.0
 
 # Global variables to store loaded models
 _model = None
@@ -74,6 +97,7 @@ def get_team_stats(team_name: str) -> Dict:
 def predict_match(home_team_name: str, away_team_name: str) -> Dict:
     """
     Predict match outcome probabilities and expected goals
+    Enhanced with FIFA Rankings for improved accuracy
     
     Args:
         home_team_name: Name of the home team
@@ -109,7 +133,7 @@ def predict_match(home_team_name: str, away_team_name: str) -> Dict:
         home_stats = get_team_stats(home_team_name)
         away_stats = get_team_stats(away_team_name)
         
-        # Calculate features
+        # Calculate historical features
         home_win_rate = home_stats["wins"] / home_stats["matches"]
         away_win_rate = away_stats["wins"] / away_stats["matches"]
         home_gf = home_stats["gf"] / home_stats["matches"]
@@ -134,11 +158,51 @@ def predict_match(home_team_name: str, away_team_name: str) -> Dict:
             "away_ga"
         ])
         
-        # Get probabilities
+        # Get base probabilities from ML model
         probs = _model.predict_proba(X)[0]
         away_win_prob = probs[0] * 100
         draw_prob = probs[1] * 100
         home_win_prob = probs[2] * 100
+        
+        # ===== FIFA RANKINGS ADJUSTMENT =====
+        if FIFA_RANKINGS_AVAILABLE:
+            # Get FIFA ranking data
+            home_rank = get_fifa_rank(home_team_name)
+            away_rank = get_fifa_rank(away_team_name)
+            home_elo = get_elo_rating(home_team_name)
+            away_elo = get_elo_rating(away_team_name)
+            home_form = calculate_form_score(home_team_name)
+            away_form = calculate_form_score(away_team_name)
+            
+            # Calculate ranking advantage (lower rank = better)
+            rank_diff = away_rank - home_rank  # Positive means home team ranked higher
+            elo_diff = home_elo - away_elo
+            form_diff = home_form - away_form
+            
+            # Calculate adjustment factor (max ±20% shift)
+            rank_adjustment = np.clip(rank_diff * 0.4, -20, 20)  # Each rank = 0.4%
+            elo_adjustment = np.clip(elo_diff * 0.08, -15, 15)   # Each ELO point = 0.08%
+            form_adjustment = np.clip(form_diff * 0.3, -10, 10)  # Each form point = 0.3%
+            
+            # Combined adjustment (weighted)
+            total_adjustment = (
+                rank_adjustment * 0.4 +  # 40% weight on FIFA rank
+                elo_adjustment * 0.35 +  # 35% weight on ELO
+                form_adjustment * 0.25   # 25% weight on recent form
+            )
+            
+            # Apply adjustment to probabilities
+            home_win_adj = home_win_prob * (1 + total_adjustment/100)
+            away_win_adj = away_win_prob * (1 - total_adjustment/100)
+            
+            # Normalize to ensure they sum to 100%
+            total = home_win_adj + away_win_adj + draw_prob
+            home_win_prob = (home_win_adj / total) * 100
+            draw_prob = (draw_prob / total) * 100
+            away_win_prob = (away_win_adj / total) * 100
+            
+            print(f"📊 {home_team_name} vs {away_team_name}")
+            print(f"   Rank: {home_rank} vs {away_rank} | Adjustment: {total_adjustment:+.1f}%")
         
         # Calculate expected goals
         home_attack = home_gf
@@ -156,6 +220,13 @@ def predict_match(home_team_name: str, away_team_name: str) -> Dict:
         elif away_win_prob > 60:
             away_xg *= 1.25
             home_xg *= 0.85
+        
+        # FIFA Rankings boost for xG
+        if FIFA_RANKINGS_AVAILABLE:
+            home_conf_boost = get_confederation_strength(home_team_name)
+            away_conf_boost = get_confederation_strength(away_team_name)
+            home_xg *= home_conf_boost
+            away_xg *= away_conf_boost
         
         # Ensure minimum xG
         home_xg = max(0.3, home_xg)
@@ -199,6 +270,8 @@ def predict_match(home_team_name: str, away_team_name: str) -> Dict:
         
     except Exception as e:
         print(f"Error in predict_match: {e}")
+        import traceback
+        traceback.print_exc()
         # Fallback to simple probabilities
         return {
             "home_win_prob": 40.0,
