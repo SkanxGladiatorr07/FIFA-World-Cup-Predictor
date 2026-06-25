@@ -50,9 +50,8 @@ export default function MatchPredictorPage() {
 
   const fetchMatchDetails = async () => {
     try {
-      // Fetch details for visible matches only (first 20 to avoid overload)
-      const matchesToFetch = filteredMatches.slice(0, 20);
-      const detailsPromises = matchesToFetch.map(match => 
+      // Fetch details for ALL filtered matches
+      const detailsPromises = filteredMatches.map(match => 
         apiClient.getMatch(match.id).catch(err => {
           console.error(`Failed to fetch details for match ${match.id}:`, err);
           return null;

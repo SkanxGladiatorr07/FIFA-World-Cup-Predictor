@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { SimulationResponse, SimulationCreate } from '@/lib/types';
 import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/Button';
-import { TournamentBracket } from '@/components/tournament/TournamentBracket';
 import toast from 'react-hot-toast';
 
 export default function TournamentSimulatorPage() {
@@ -12,7 +11,6 @@ export default function TournamentSimulatorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
   const [currentSimulation, setCurrentSimulation] = useState<SimulationResponse | null>(null);
-  const [showBracket, setShowBracket] = useState(false);
   
   // Simulation parameters
   const [numSimulations, setNumSimulations] = useState(1000);
@@ -407,27 +405,7 @@ export default function TournamentSimulatorPage() {
               <h3 className="text-2xl font-bold text-on-surface mb-2">Latest Simulation Results</h3>
               <p className="text-sm text-on-surface-variant">{currentSimulation.simulation_name}</p>
             </div>
-            <button
-              onClick={() => setShowBracket(!showBracket)}
-              className="px-4 py-2 bg-surface-container-high text-on-surface font-semibold rounded-lg
-                       hover:bg-surface-bright transition-all flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM11 7h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2z"/>
-              </svg>
-              {showBracket ? 'Hide Bracket' : 'Show Bracket'}
-            </button>
           </div>
-
-          {/* Tournament Bracket */}
-          {showBracket && (
-            <div className="mb-8 bg-surface-container-low rounded-xl p-6 border border-outline-variant">
-              <h4 className="text-lg font-bold text-on-surface mb-4 text-center">Tournament Bracket Visualization</h4>
-              <TournamentBracket
-                winner={currentSimulation.results_json?.most_likely_winner}
-              />
-            </div>
-          )}
 
           {renderSimulationResults(currentSimulation)}
         </div>
@@ -450,7 +428,6 @@ export default function TournamentSimulatorPage() {
                          hover:border-primary hover:shadow-2xl hover:scale-105 hover:bg-surface-container"
                 onClick={() => {
                   setCurrentSimulation(sim);
-                  setShowBracket(false);
                 }}
               >
                 <div className="flex items-start justify-between mb-4 pb-4 border-b-2 border-primary/20">

@@ -40,8 +40,6 @@ FORWARDS_DATA = [
      "goals_per_90": 0.68, "xg_season": 19.5, "shots_per_game": 3.6},
     {"name": "Bukayo Saka", "team_code": "ENG", "age": 24, "club": "Arsenal", "position": "Forward",
      "goals_per_90": 0.71, "xg_season": 21.2, "shots_per_game": 3.8},
-    {"name": "Phil Foden", "team_code": "ENG", "age": 26, "club": "Manchester City", "position": "Forward",
-     "goals_per_90": 0.69, "xg_season": 20.4, "shots_per_game": 3.7},
     
     # Strong Forwards
     {"name": "Rafael Leão", "team_code": "POR", "age": 27, "club": "AC Milan", "position": "Forward",
@@ -50,8 +48,6 @@ FORWARDS_DATA = [
      "goals_per_90": 0.72, "xg_season": 21.8, "shots_per_game": 4.0},
     {"name": "Pedri", "team_code": "ESP", "age": 23, "club": "Barcelona", "position": "Forward",
      "goals_per_90": 0.48, "xg_season": 14.2, "shots_per_game": 2.8},
-    {"name": "Álvaro Morata", "team_code": "ESP", "age": 33, "club": "Atletico Madrid", "position": "Forward",
-     "goals_per_90": 0.62, "xg_season": 18.3, "shots_per_game": 3.5},
     {"name": "Memphis Depay", "team_code": "NED", "age": 30, "club": "Atletico Madrid", "position": "Forward",
      "goals_per_90": 0.59, "xg_season": 17.4, "shots_per_game": 3.3},
     
@@ -60,8 +56,6 @@ FORWARDS_DATA = [
      "goals_per_90": 0.57, "xg_season": 16.8, "shots_per_game": 3.2},
     {"name": "Darwin Núñez", "team_code": "URU", "age": 27, "club": "Liverpool", "position": "Forward",
      "goals_per_90": 0.66, "xg_season": 19.2, "shots_per_game": 3.8},
-    {"name": "Luis Suárez", "team_code": "URU", "age": 39, "club": "Inter Miami", "position": "Forward",
-     "goals_per_90": 0.58, "xg_season": 17.1, "shots_per_game": 3.4},
     {"name": "Romelu Lukaku", "team_code": "BEL", "age": 33, "club": "Napoli", "position": "Forward",
      "goals_per_90": 0.63, "xg_season": 18.6, "shots_per_game": 3.6},
     {"name": "Kevin De Bruyne", "team_code": "BEL", "age": 35, "club": "Manchester City", "position": "Forward",
@@ -72,7 +66,7 @@ FORWARDS_DATA = [
      "goals_per_90": 0.61, "xg_season": 18.0, "shots_per_game": 3.5},
     {"name": "Victor Osimhen", "team_code": "NGA", "age": 27, "club": "Napoli", "position": "Forward",
      "goals_per_90": 0.76, "xg_season": 22.5, "shots_per_game": 4.0},
-    {"name": "Son Heung-min", "team_code": "KOR", "age": 34, "club": "Tottenham", "position": "Forward",
+    {"name": "Son Heung-min", "team_code": "KOR", "age": 34, "club": "LAFC", "position": "Forward",
      "goals_per_90": 0.65, "xg_season": 19.1, "shots_per_game": 3.7},
     {"name": "Hwang Hee-chan", "team_code": "KOR", "age": 30, "club": "Wolves", "position": "Forward",
      "goals_per_90": 0.52, "xg_season": 15.3, "shots_per_game": 3.1},

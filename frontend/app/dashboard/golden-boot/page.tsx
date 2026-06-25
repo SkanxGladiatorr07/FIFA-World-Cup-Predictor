@@ -211,72 +211,87 @@ export default function GoldenBootPage() {
               <div
                 key={player.id}
                 onClick={() => setSelectedPlayerId(player.id)}
-                className={`glass-panel rounded-xl p-6 cursor-pointer transition-all duration-300 ${
+                className={`relative overflow-hidden rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? 'border-primary-container shadow-2xl shadow-primary-container/20 scale-105 bg-primary-container/10'
+                    ? 'bg-gradient-to-br from-primary/20 via-primary/10 to-transparent border-4 border-primary shadow-2xl shadow-primary/40 scale-105 ring-4 ring-primary/20'
                     : isMyPrediction
-                    ? 'border-primary-container/50 bg-primary-container/5'
-                    : 'border-outline-variant hover:border-primary/50 hover:shadow-xl hover:scale-102'
+                    ? 'bg-gradient-to-br from-primary/10 to-transparent border-3 border-primary/60 shadow-xl'
+                    : 'bg-gradient-to-br from-surface-container to-surface-container-high border-2 border-outline-variant hover:border-primary/60 hover:shadow-2xl hover:scale-102 hover:from-primary/5'
                 }`}
               >
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: 'radial-gradient(circle, #f59e0b 1px, transparent 1px)',
+                    backgroundSize: '20px 20px'
+                  }}></div>
+                </div>
+
                 {/* Player Header */}
-                <div className="flex items-start justify-between mb-4">
+                <div className="relative flex items-start justify-between mb-5 pb-4 border-b-2 border-gradient-to-r from-primary/40 via-primary/20 to-transparent">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-on-surface mb-2">{player.name}</h3>
-                    <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-                      <span className="px-2 py-1 bg-surface-variant rounded font-semibold">{player.team_code}</span>
-                      <span>•</span>
-                      <span>{player.age} years</span>
+                    <h3 className="text-2xl font-black text-primary mb-3 tracking-tight drop-shadow-lg">{player.name}</h3>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span className="px-4 py-2 bg-gradient-to-r from-primary to-primary-fixed text-white rounded-lg font-black text-lg shadow-lg">
+                        {player.team_code}
+                      </span>
+                      <span className="px-3 py-1 bg-secondary/20 text-secondary rounded-lg font-bold text-sm border border-secondary/30">
+                        {player.age} yrs
+                      </span>
                     </div>
-                    <p className="text-sm text-on-surface-variant mt-2">{player.club}</p>
+                    <p className="text-sm text-on-surface-variant mt-3 font-semibold bg-surface-container-high px-3 py-1 rounded-lg inline-block">
+                      {player.club}
+                    </p>
                   </div>
                   {isMyPrediction && (
-                    <span className="px-3 py-1 bg-primary-container text-on-primary-fixed text-xs font-bold rounded-lg uppercase tracking-wider">
-                      Your Pick
+                    <span className="px-4 py-2 bg-gradient-to-r from-tertiary to-tertiary-container text-white text-xs font-black rounded-xl uppercase tracking-wider shadow-lg animate-pulse">
+                      ★ Your Pick
                     </span>
                   )}
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-outline-variant">
-                  <div className="bg-surface-container-high rounded-lg p-3">
-                    <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Goals/90</p>
-                    <p className="text-2xl font-bold text-primary">
+                <div className="relative grid grid-cols-2 gap-4 mb-5 pb-5 border-b border-outline-variant">
+                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-4 border-2 border-blue-500/30 shadow-lg">
+                    <p className="text-xs text-blue-300 font-bold uppercase tracking-wider mb-2">Goals/90</p>
+                    <p className="text-3xl font-black text-blue-400 drop-shadow-lg">
                       {player.goals_per_90?.toFixed(2) || 'N/A'}
                     </p>
                   </div>
-                  <div className="bg-surface-container-high rounded-lg p-3">
-                    <p className="text-xs text-on-surface-variant font-semibold uppercase tracking-wider mb-1">Shots/Game</p>
-                    <p className="text-2xl font-bold text-primary">
+                  <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl p-4 border-2 border-purple-500/30 shadow-lg">
+                    <p className="text-xs text-purple-300 font-bold uppercase tracking-wider mb-2">Shots/Game</p>
+                    <p className="text-3xl font-black text-purple-400 drop-shadow-lg">
                       {player.shots_per_game?.toFixed(1) || 'N/A'}
                     </p>
                   </div>
                 </div>
 
                 {/* AI Prediction */}
-                <div className="bg-surface-container-low rounded-xl p-4 space-y-2">
+                <div className="relative bg-gradient-to-br from-primary via-primary-fixed to-primary/80 rounded-2xl p-5 space-y-3 border-2 border-primary-container shadow-2xl">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">AI Prediction</span>
-                    <span className="text-xs font-semibold text-tertiary px-2 py-1 bg-tertiary-container/20 rounded">
+                    <span className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+                      <span className="text-2xl">🤖</span> AI Prediction
+                    </span>
+                    <span className="text-xs font-black text-white px-3 py-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
                       {playerStat.prediction_confidence?.toFixed(0)}% confidence
                     </span>
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-primary">
+                    <span className="text-5xl font-black text-white drop-shadow-2xl">
                       {playerStat.predicted_goals?.toFixed(1)}
                     </span>
-                    <span className="text-sm text-on-surface-variant font-medium">goals predicted</span>
+                    <span className="text-base text-white/90 font-bold">goals predicted</span>
                   </div>
                 </div>
 
                 {/* Selection Indicator */}
                 {isSelected && (
-                  <div className="mt-4 pt-4 border-t border-primary-container/30">
-                    <div className="flex items-center gap-2 text-primary text-sm font-bold">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="relative mt-5 pt-5 border-t-2 border-primary/40">
+                    <div className="flex items-center gap-3 text-primary text-base font-black justify-center animate-bounce">
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="uppercase tracking-wider">Selected</span>
+                      <span className="uppercase tracking-widest">SELECTED ✓</span>
                     </div>
                   </div>
                 )}

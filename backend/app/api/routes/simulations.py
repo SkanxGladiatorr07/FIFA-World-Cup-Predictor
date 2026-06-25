@@ -186,8 +186,20 @@ def simulate_tournament(db: Session, num_simulations: int, randomness: float) ->
     }
     
     most_likely_winner = winner_counter.most_common(1)[0][0] if winner_counter else None
-    most_likely_runner_up = runner_up_counter.most_common(1)[0][0] if runner_up_counter else None
-    most_likely_third_place = third_place_counter.most_common(1)[0][0] if third_place_counter else None
+    
+    # Ensure runner-up is different from winner
+    most_likely_runner_up = None
+    for team, count in runner_up_counter.most_common(10):
+        if team != most_likely_winner:
+            most_likely_runner_up = team
+            break
+    
+    # Ensure third place is different from winner and runner-up
+    most_likely_third_place = None
+    for team, count in third_place_counter.most_common(10):
+        if team != most_likely_winner and team != most_likely_runner_up:
+            most_likely_third_place = team
+            break
     
     return {
         "simulations_run": num_simulations,

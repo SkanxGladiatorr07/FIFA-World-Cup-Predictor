@@ -45,12 +45,12 @@ def seed_world_cup_2026_matches():
         (34, "6/21", "RSA", "KOR", "Seattle", "A"),
         
         # GROUP B
-        (3, "6/12", "CAN", "BAH", "Vancouver", "B"),
+        (3, "6/12", "CAN", "BIH", "Vancouver", "B"),
         (4, "6/12", "QAT", "SUI", "San Francisco Bay Area", "B"),
-        (19, "6/17", "BAH", "SUI", "Seattle", "B"),
+        (19, "6/17", "BIH", "SUI", "Seattle", "B"),
         (20, "6/17", "QAT", "CAN", "Vancouver", "B"),
         (35, "6/22", "CAN", "SUI", "Vancouver", "B"),
-        (36, "6/22", "BAH", "QAT", "Seattle", "B"),
+        (36, "6/22", "BIH", "QAT", "Seattle", "B"),
         
         # GROUP C
         (5, "6/12", "BRA", "MAR", "Los Angeles", "C"),

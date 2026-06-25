@@ -40,7 +40,7 @@ def seed_world_cup_2026_teams():
         
         # Group B
         {"name": "Canada", "code": "CAN", "fifa_ranking": 38, "elo_rating": 1541, "confederation": "CONCACAF", "group_letter": "B"},
-        {"name": "Bahrain", "code": "BAH", "fifa_ranking": 86, "elo_rating": 1412, "confederation": "AFC", "group_letter": "B"},
+        {"name": "Bosnia and Herzegovina", "code": "BIH", "fifa_ranking": 64, "elo_rating": 1458, "confederation": "UEFA", "group_letter": "B"},
         {"name": "Qatar", "code": "QAT", "fifa_ranking": 58, "elo_rating": 1476, "confederation": "AFC", "group_letter": "B"},
         {"name": "Switzerland", "code": "SUI", "fifa_ranking": 19, "elo_rating": 1621, "confederation": "UEFA", "group_letter": "B"},
         

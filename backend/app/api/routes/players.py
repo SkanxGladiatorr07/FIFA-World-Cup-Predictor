@@ -143,8 +143,8 @@ async def get_top_goalkeepers(
         )
         
         # Mock prediction (replace with ML model later)
-        predicted_saves = (player.save_percentage or 70.0) * 0.5  # Mock calculation
-        confidence = min(95.0, player.save_percentage or 70.0)
+        predicted_saves = float(player.save_percentage or 70.0) * 0.5  # Mock calculation
+        confidence = min(95.0, float(player.save_percentage or 70.0))
         
         result.append(PlayerStats(
             player=player_with_team,
