@@ -4,17 +4,23 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
+# Set production environment
+ENV NODE_ENV=production
+
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies (production only)
+RUN npm ci --production=false
 
 # Copy application code
 COPY . .
 
+# Build Next.js for production
+RUN npm run build
+
 # Expose port
 EXPOSE 3000
 
-# Run the application
-CMD ["npm", "run", "dev"]
+# Start Next.js in production mode
+CMD ["npm", "start"]
