@@ -263,3 +263,68 @@ async def get_available_groups(db: Session = Depends(get_db)):
     """
     groups = db.query(Match.group_letter).distinct().filter(Match.group_letter.isnot(None)).all()
     return sorted([group[0] for group in groups if group[0]])
+
+
+@router.patch("/{match_id}/set-teams")
+async def set_knockout_teams(
+    match_id: int,
+    home_team_code: Optional[str] = Query(None, description="3-letter code for home team"),
+    away_team_code: Optional[str] = Query(None, description="3-letter code for away team"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Set the teams for a knockout stage match (admin only)
+    This allows progressively building the bracket as teams advance
+    """
+    # Get the match
+    match = db.query(Match).filter(Match.id == match_id).first()
+    
+    if not match:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Match not found"
+        )
+    
+    # Only allow for knockout stages
+    if match.match_stage == "GROUP":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot modify group stage matches"
+        )
+    
+    # Update home team if provided
+    if home_team_code:
+        home_team = db.query(Team).filter(Team.code == home_team_code.upper()).first()
+        if not home_team:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Home team with code '{home_team_code}' not found"
+            )
+        match.home_team_id = home_team.id
+    
+    # Update away team if provided
+    if away_team_code:
+        away_team = db.query(Team).filter(Team.code == away_team_code.upper()).first()
+        if not away_team:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Away team with code '{away_team_code}' not found"
+            )
+        match.away_team_id = away_team.id
+    
+    db.commit()
+    db.refresh(match)
+    
+    # Build response
+    home_team_obj = db.query(Team).filter(Team.id == match.home_team_id).first() if match.home_team_id else None
+    away_team_obj = db.query(Team).filter(Team.id == match.away_team_id).first() if match.away_team_id else None
+    
+    return {
+        "success": True,
+        "match_id": match.id,
+        "match_number": match.match_number,
+        "stage": match.match_stage,
+        "home_team": home_team_obj.name if home_team_obj else "TBD",
+        "away_team": away_team_obj.name if away_team_obj else "TBD"
+    }
