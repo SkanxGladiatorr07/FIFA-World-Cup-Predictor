@@ -66,12 +66,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           )}
           <span className="text-xs text-[#f59e0b] font-semibold">Match #{match.match_number}</span>
         </div>
-        
-        {match.is_completed && (
-          <span className="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-lg">
-            FINAL
-          </span>
-        )}
       </div>
 
       {/* Teams Display */}
@@ -85,15 +79,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             {match.home_team.code}
           </div>
           <h3 className="font-bold text-white text-base">{match.home_team.name}</h3>
-          {match.is_completed && match.home_score !== null && (
-            <span className="text-3xl font-bold text-[#f59e0b] mt-2">{match.home_score}</span>
-          )}
         </div>
 
         {/* VS Divider */}
         <div className="flex flex-col items-center">
           <span className="text-[#f59e0b] text-base font-bold">VS</span>
-          {!match.is_completed && !isTBD && (
+          {!isTBD && (
             <span className="text-xs text-gray-500 mt-1 font-semibold">
               {format(matchDate, 'MMM d')}
             </span>
@@ -109,9 +100,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             {match.away_team.code}
           </div>
           <h3 className="font-bold text-white text-base">{match.away_team.name}</h3>
-          {match.is_completed && match.away_score !== null && (
-            <span className="text-3xl font-bold text-[#f59e0b] mt-2">{match.away_score}</span>
-          )}
         </div>
       </div>
 
@@ -219,13 +207,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       {isTBD && (
         <div className="text-center py-4 bg-[#2d3349] rounded-xl border border-[#3d4359] mx-6 mb-6">
           <p className="text-sm text-gray-400 font-medium">Teams to be determined after group stage</p>
-        </div>
-      )}
-
-      {/* Completed Match Message */}
-      {match.is_completed && (
-        <div className="text-center py-3 bg-green-500/20 rounded-xl border border-green-500/30 mx-6 mb-6">
-          <p className="text-xs text-green-400 font-bold uppercase tracking-wider">Match Completed</p>
         </div>
       )}
     </div>
