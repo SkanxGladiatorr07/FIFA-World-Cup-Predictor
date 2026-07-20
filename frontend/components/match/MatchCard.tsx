@@ -72,11 +72,21 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-center mb-5 px-6">
         {/* Home Team */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-4 border-[#f59e0b]"
-               style={{ 
-                 backgroundColor: match.home_team.primary_color + '20',
-               }}>
-            {match.home_team.code}
+          <div className="w-24 h-24 rounded-lg overflow-hidden shadow-lg border-4 border-[#f59e0b] mb-3 bg-gray-700 flex items-center justify-center">
+            {match.home_team.flag_url ? (
+              <img 
+                src={match.home_team.flag_url} 
+                alt={match.home_team.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling!.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <span className="text-3xl font-bold text-[#f59e0b] hidden" style={{display: !match.home_team.flag_url ? 'flex' : 'none'}}>
+              {match.home_team.code}
+            </span>
           </div>
           <h3 className="font-bold text-white text-base">{match.home_team.name}</h3>
         </div>
@@ -93,11 +103,21 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 
         {/* Away Team */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-3 text-3xl font-bold shadow-lg border-4 border-[#f59e0b]"
-               style={{ 
-                 backgroundColor: match.away_team.primary_color + '20',
-               }}>
-            {match.away_team.code}
+          <div className="w-24 h-24 rounded-lg overflow-hidden shadow-lg border-4 border-[#f59e0b] mb-3 bg-gray-700 flex items-center justify-center">
+            {match.away_team.flag_url ? (
+              <img 
+                src={match.away_team.flag_url} 
+                alt={match.away_team.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling!.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <span className="text-3xl font-bold text-[#f59e0b] hidden" style={{display: !match.away_team.flag_url ? 'flex' : 'none'}}>
+              {match.away_team.code}
+            </span>
           </div>
           <h3 className="font-bold text-white text-base">{match.away_team.name}</h3>
         </div>
