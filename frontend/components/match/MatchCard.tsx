@@ -76,11 +76,13 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             {match.home_team.flag_url ? (
               <img 
                 src={match.home_team.flag_url} 
-                alt={match.home_team.name}
+                alt={`${match.home_team.name} flag`}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling!.style.display = 'flex';
+                  const elem = e.currentTarget;
+                  elem.style.display = 'none';
+                  const nextElem = elem.nextElementSibling as HTMLElement;
+                  if (nextElem) nextElem.style.display = 'flex';
                 }}
               />
             ) : null}
@@ -107,11 +109,13 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             {match.away_team.flag_url ? (
               <img 
                 src={match.away_team.flag_url} 
-                alt={match.away_team.name}
+                alt={`${match.away_team.name} flag`}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling!.style.display = 'flex';
+                  const elem = e.currentTarget;
+                  elem.style.display = 'none';
+                  const nextElem = elem.nextElementSibling as HTMLElement;
+                  if (nextElem) nextElem.style.display = 'flex';
                 }}
               />
             ) : null}

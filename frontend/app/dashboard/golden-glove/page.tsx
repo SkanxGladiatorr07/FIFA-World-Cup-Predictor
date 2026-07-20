@@ -231,6 +231,15 @@ export default function GoldenGlovePage() {
                 <div className="relative flex items-start justify-between mb-5 pb-4 border-b-2 border-gradient-to-r from-secondary/40 via-secondary/20 to-transparent">
                   <div className="flex-1">
                     <h3 className="text-2xl font-black text-secondary mb-3 tracking-tight drop-shadow-lg">{player.name}</h3>
+                    {player.flag_url && (
+                      <div className="w-16 h-12 rounded-lg overflow-hidden mb-3 border-2 border-secondary/50 shadow-md">
+                        <img 
+                          src={player.flag_url} 
+                          alt={player.team_code}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
                     <div className="flex items-center gap-3 flex-wrap">
                       <span className="px-4 py-2 bg-gradient-to-r from-secondary to-secondary-fixed text-white rounded-lg font-black text-lg shadow-lg">
                         {player.team_code}

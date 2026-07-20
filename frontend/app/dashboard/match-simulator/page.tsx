@@ -204,23 +204,43 @@ export default function MatchSimulatorPage() {
 
                 <div className="grid grid-cols-2 gap-8 mb-8">
                   <div className="text-center">
-                    <div className="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-bold shadow-lg border-4"
-                         style={{ 
-                           backgroundColor: selectedMatch.home_team.primary_color + '20',
-                           borderColor: selectedMatch.home_team.primary_color + '40'
-                         }}>
-                      {selectedMatch.home_team.code}
-                    </div>
+                    {selectedMatch.home_team.flag_url ? (
+                      <div className="w-32 h-24 rounded-lg overflow-hidden mx-auto mb-4 shadow-lg border-4 border-[#f59e0b]">
+                        <img 
+                          src={selectedMatch.home_team.flag_url} 
+                          alt={selectedMatch.home_team.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-bold shadow-lg border-4"
+                           style={{ 
+                             backgroundColor: selectedMatch.home_team.primary_color + '20',
+                             borderColor: selectedMatch.home_team.primary_color + '40'
+                           }}>
+                        {selectedMatch.home_team.code}
+                      </div>
+                    )}
                     <h4 className="font-bold text-on-surface text-lg">{selectedMatch.home_team.name}</h4>
                   </div>
                   <div className="text-center">
-                    <div className="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-bold shadow-lg border-4"
-                         style={{ 
-                           backgroundColor: selectedMatch.away_team.primary_color + '20',
-                           borderColor: selectedMatch.away_team.primary_color + '40'
-                         }}>
-                      {selectedMatch.away_team.code}
-                    </div>
+                    {selectedMatch.away_team.flag_url ? (
+                      <div className="w-32 h-24 rounded-lg overflow-hidden mx-auto mb-4 shadow-lg border-4 border-[#f59e0b]">
+                        <img 
+                          src={selectedMatch.away_team.flag_url} 
+                          alt={selectedMatch.away_team.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-bold shadow-lg border-4"
+                           style={{ 
+                             backgroundColor: selectedMatch.away_team.primary_color + '20',
+                             borderColor: selectedMatch.away_team.primary_color + '40'
+                           }}>
+                        {selectedMatch.away_team.code}
+                      </div>
+                    )}
                     <h4 className="font-bold text-on-surface text-lg">{selectedMatch.away_team.name}</h4>
                   </div>
                 </div>
