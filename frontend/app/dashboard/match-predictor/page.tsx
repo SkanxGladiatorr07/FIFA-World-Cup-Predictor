@@ -38,7 +38,7 @@ export default function MatchPredictorPage() {
   const fetchMatches = async () => {
     try {
       setIsLoading(true);
-      const data = await apiClient.getMatches({ limit: 100 });
+      const data = await apiClient.getMatches({ limit: 200 });
       setMatches(data);
     } catch (error: any) {
       toast.error('Failed to load matches');
