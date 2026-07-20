@@ -182,12 +182,14 @@ export default function MatchPredictorPage() {
                          focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer
                          transition-all duration-200 text-base font-medium"
               >
-                <option value="all">All Stages</option>
-                {availableStages.map((stage) => (
-                  <option key={stage} value={stage}>
-                    {stage}
-                  </option>
-                ))}
+                <option value="all">🌍 All Stages</option>
+                <option value="GROUP">⚽ Group Stage</option>
+                <option value="ROUND_OF_32">🏆 Round of 32</option>
+                <option value="ROUND_OF_16">🔥 Round of 16</option>
+                <option value="QUARTER_FINAL">💎 Quarter-Finals</option>
+                <option value="SEMI_FINAL">⭐ Semi-Finals</option>
+                <option value="THIRD_PLACE">🥉 Third Place</option>
+                <option value="FINAL">👑 Final</option>
               </select>
             </div>
 
