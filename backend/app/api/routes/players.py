@@ -58,7 +58,8 @@ async def get_players(
             "xg_prevented": player.xg_prevented,
             "clean_sheet_percentage": player.clean_sheet_percentage,
             "team_name": team.name if team else None,
-            "team_code": team.code if team else None
+            "team_code": team.code if team else None,
+            "flag_url": team.flag_url if team else None
         }
         result.append(PlayerWithTeam(**player_dict))
     
@@ -94,7 +95,8 @@ async def get_top_forwards(
             xg_prevented=player.xg_prevented,
             clean_sheet_percentage=player.clean_sheet_percentage,
             team_name=team.name if team else None,
-            team_code=team.code if team else None
+            team_code=team.code if team else None,
+            flag_url=team.flag_url if team else None
         )
         
         # Mock prediction (replace with ML model later)
@@ -139,7 +141,8 @@ async def get_top_goalkeepers(
             xg_prevented=player.xg_prevented,
             clean_sheet_percentage=player.clean_sheet_percentage,
             team_name=team.name if team else None,
-            team_code=team.code if team else None
+            team_code=team.code if team else None,
+            flag_url=team.flag_url if team else None
         )
         
         # Mock prediction (replace with ML model later)

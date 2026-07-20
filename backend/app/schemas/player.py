@@ -30,6 +30,7 @@ class PlayerWithTeam(PlayerResponse):
     """Player with team details"""
     team_name: Optional[str] = None
     team_code: Optional[str] = None
+    flag_url: Optional[str] = None
     
     class Config:
         from_attributes = True
